@@ -1,14 +1,14 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import AuthPage from "./pages/AuthPage";
+import CitySelection from "./pages/CitySelection";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<AuthPage />} />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route path="/" element={<AuthPage />} />
+      <Route path="/city-selection" element={<CitySelection />} />
+    </Routes>
   );
 }
 
