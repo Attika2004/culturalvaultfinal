@@ -1,70 +1,3 @@
-
-/*const { connectDB, sql } = require("../db");
-const nodemailer = require("nodemailer");
-
-// Send booking confirmation email
-async function sendBookingEmail(toEmail, bookingDetails) {
-  let transporter = nodemailer.createTransport({
-    service: "Gmail", // or other SMTP service
-    auth: {
-      user: "YOUR_EMAIL@gmail.com",
-      pass: "YOUR_APP_PASSWORD" // generate Gmail App password
-    }
-  });
-
-  let mailOptions = {
-    from: '"Cultural Vault" <YOUR_EMAIL@gmail.com>',
-    to: toEmail,
-    subject: "Tour Booking Confirmation",
-    html: `
-      <h2>Your booking is confirmed!</h2>
-      <p><strong>Date:</strong> ${bookingDetails.date}</p>
-      <p><strong>Time:</strong> ${bookingDetails.time}</p>
-      <p><strong>Sites:</strong> ${bookingDetails.selectedSites}</p>
-      <p><strong>Travel Mode:</strong> ${bookingDetails.travelMode}</p>
-      <p><strong>Tour Package:</strong> ${bookingDetails.tourPackage}</p>
-      <p><strong>Total Cost:</strong> PKR ${bookingDetails.totalCost}</p>
-      <p>Thank you for booking with Cultural Vault!</p>
-    `
-  };
-
-  await transporter.sendMail(mailOptions);
-}
-
-// Create booking
-exports.createBooking = async (req, res) => {
-  const { name, email, phone, date, time, guests, selectedSites, travelMode, tourPackage, specialRequests, totalCost } = req.body;
-
-  try {
-    const pool = await connectDB();
-
-    await pool.request()
-      .input("name", sql.VarChar, name)
-      .input("email", sql.VarChar, email)
-      .input("phone", sql.VarChar, phone)
-      .input("date", sql.Date, date)
-      .input("time", sql.VarChar, time)
-      .input("guests", sql.Int, guests)
-      .input("selectedSites", sql.VarChar, selectedSites)
-      .input("travelMode", sql.VarChar, travelMode)
-      .input("tourPackage", sql.VarChar, tourPackage)
-      .input("specialRequests", sql.VarChar, specialRequests || "")
-      .input("totalCost", sql.Int, totalCost)
-      .query(`
-        INSERT INTO Bookings (name, email, phone, date, time, guests, selectedSites, travelMode, tourPackage, specialRequests, totalCost)
-        VALUES (@name, @email, @phone, @date, @time, @guests, @selectedSites, @travelMode, @tourPackage, @specialRequests, @totalCost)
-      `);
-
-    // Send confirmation email
-    await sendBookingEmail(email, { date, time, selectedSites, travelMode, tourPackage, totalCost });
-
-    res.json({ message: "Your tour booking has been confirmed! A confirmation email has been sent." });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
-  }
-};*/
-
 const { connectDB, sql } = require("../db");
 
 // Create booking
@@ -105,11 +38,11 @@ exports.createBooking = async (req, res) => {
       .input("email", sql.NVarChar(255), email)
       .input("phone", sql.NVarChar(20), phone)
       .input("date", sql.Date, date)
-      .input("time", sql.NVarChar(10), time)
-      .input("guests", sql.Int, guests)
+      .input("time", sql.NVarChar(10), time || "09:00")
+      .input("guests", sql.Int, guests || 1)
       .input("selectedSites", sql.NVarChar(sql.MAX), selectedSites)
-      .input("travelMode", sql.NVarChar(50), travelMode)
-      .input("tourPackage", sql.NVarChar(50), tourPackage)
+      .input("travelMode", sql.NVarChar(50), travelMode || "car")
+      .input("tourPackage", sql.NVarChar(50), tourPackage || "standard")
       .input("specialRequests", sql.NVarChar(sql.MAX), specialRequests || "")
       .input("totalCost", sql.Int, totalCost)
       .query(`
@@ -118,6 +51,7 @@ exports.createBooking = async (req, res) => {
           selectedSites, travelMode, tourPackage, 
           specialRequests, totalCost
         )
+        OUTPUT INSERTED.*
         VALUES (
           @name, @email, @phone, @date, @time, @guests,
           @selectedSites, @travelMode, @tourPackage,
@@ -130,7 +64,8 @@ exports.createBooking = async (req, res) => {
 
     res.status(200).json({ 
       message: "Thank you! Your tour booking has been confirmed successfully!",
-      success: true
+      success: true,
+      booking: result.recordset[0]
     });
 
   } catch (err) {

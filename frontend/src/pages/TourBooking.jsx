@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./TourBooking.css";
+
+const API_URL = "http://localhost:5000/api";
 
 const agents = [
   { id: 1, name: "Ahmed Khan", phone: "+92 300 1234567", email: "ahmed.khan@culturalvault.pk" },
@@ -40,11 +43,25 @@ export default function TourBooking() {
 
   const [assignedAgent, setAssignedAgent] = useState(null);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    const userEmail = localStorage.getItem("userEmail");
+    const userName = localStorage.getItem("userName");
+
     if (!token) {
-      navigate("/login", { state: { from: "/tour-booking" } });
+      navigate("/auth", { state: { from: "/tour-booking" } });
+      return;
+    }
+
+    // Pre-fill user data if available
+    if (userEmail) {
+      setFormData(prev => ({ ...prev, email: userEmail }));
+    }
+    if (userName) {
+      setFormData(prev => ({ ...prev, name: userName }));
     }
   }, [navigate]);
 
@@ -81,26 +98,76 @@ export default function TourBooking() {
     return { sitesFee, packageFee, transportFee, subtotal, discount, total };
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
     if (formData.sites.length === 0) {
-      alert("Please select at least one site to visit");
+      setError("Please select at least one site to visit");
       return;
     }
 
     if (!formData.name || !formData.email || !formData.phone || !formData.date) {
-      alert("Please fill all required fields");
+      setError("Please fill all required fields");
       return;
     }
 
-    const agent = agents[Math.floor(Math.random() * agents.length)];
-    setAssignedAgent(agent);
-    setBookingConfirmed(true);
+    setLoading(true);
 
-    setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 100);
+    try {
+      const selectedSitesData = allSites.filter(s => formData.sites.includes(s.id));
+      const prices = calculatePrice();
+
+      // Prepare booking data for backend
+      const bookingData = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        date: formData.date,
+        time: "09:00", // Default time
+        guests: formData.guests,
+        selectedSites: selectedSitesData.map(s => s.name).join(", "),
+        travelMode: formData.transport,
+        tourPackage: formData.tourPackage,
+        specialRequests: `Payment Plan: ${formData.paymentPlan}`,
+        totalCost: Math.round(prices.total)
+      };
+
+      // Send to backend
+      const response = await axios.post(`${API_URL}/bookings`, bookingData);
+
+      if (response.data.success) {
+        // Assign random agent
+        const agent = agents[Math.floor(Math.random() * agents.length)];
+        setAssignedAgent(agent);
+        
+        // Store booking in localStorage for My Bookings page
+        const existingBookings = JSON.parse(localStorage.getItem("userBookings") || "[]");
+        const newBooking = {
+          date: formData.date,
+          guests: formData.guests,
+          sites: selectedSitesData.map(s => s.name).join(", "),
+          package: formData.tourPackage,
+          transport: formData.transport,
+          total: Math.round(prices.total),
+          agent: agent,
+          bookingId: response.data.booking?.BookingID
+        };
+        existingBookings.push(newBooking);
+        localStorage.setItem("userBookings", JSON.stringify(existingBookings));
+
+        setBookingConfirmed(true);
+        
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 100);
+      }
+    } catch (err) {
+      console.error("Booking error:", err);
+      setError(err.response?.data?.error || "Failed to create booking. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const prices = calculatePrice();
@@ -163,6 +230,19 @@ export default function TourBooking() {
       <div className="booking-container">
         <form onSubmit={handleSubmit} className="booking-form">
           
+          {error && (
+            <div style={{
+              background: "rgba(255, 0, 0, 0.1)",
+              border: "1px solid red",
+              color: "red",
+              padding: "15px",
+              borderRadius: "8px",
+              marginBottom: "20px"
+            }}>
+              {error}
+            </div>
+          )}
+
           {/* Personal Information */}
           <div className="form-section">
             <h2>Personal Information</h2>
@@ -343,8 +423,8 @@ export default function TourBooking() {
             </div>
           </div>
 
-          <button type="submit" className="btn-submit">
-            Confirm Booking
+          <button type="submit" className="btn-submit" disabled={loading}>
+            {loading ? "Processing..." : "Confirm Booking"}
           </button>
         </form>
       </div>

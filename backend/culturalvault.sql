@@ -11,15 +11,12 @@ GO
 -- 2. Users Table
 ------------------------------------------
 CREATE TABLE Users (
-    UserID INT IDENTITY(1,1) PRIMARY KEY,
-    FirstName VARCHAR(100) NOT NULL,
-    LastName VARCHAR(100) NOT NULL,
-    Email VARCHAR(255) UNIQUE NOT NULL,
-    PasswordHash VARCHAR(255) NOT NULL,
-    Phone VARCHAR(20),
-    CreatedAt DATETIME DEFAULT GETDATE()
-);
-GO
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    name NVARCHAR(100) NOT NULL,
+    email NVARCHAR(255) UNIQUE NOT NULL,
+    password NVARCHAR(255) NOT NULL,
+    createdAt DATETIME DEFAULT GETDATE()
+);GO
 
 ------------------------------------------
 -- 3. Admins Table

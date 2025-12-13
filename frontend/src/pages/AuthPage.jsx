@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
+
+const API_URL = "http://localhost:5000/api";
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -7,52 +10,97 @@ export default function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
     if (isLogin) {
       // Login
       if (!email || !password) {
-        alert("Please fill in all fields");
+        setError("Please fill in all fields");
         return;
       }
 
-      localStorage.setItem("token", "dummy-token");
-      localStorage.setItem("userID", "dummy-user");
-      localStorage.setItem("userName", email.split("@")[0]);
-      
-      // Get the return path from location state
-      const returnTo = location.state?.from;
-      
-      if (returnTo) {
-        // If there's a specific page to return to, go there
-        navigate(returnTo);
-      } else {
-        // Otherwise go to city selection
-        navigate("/city-selection");
+      setLoading(true);
+
+      try {
+        const response = await axios.post(`${API_URL}/auth/login`, {
+          email,
+          password
+        });
+
+        if (response.data.token) {
+          // Store token and user data
+          localStorage.setItem("token", response.data.token);
+          localStorage.setItem("userID", response.data.user.id);
+          localStorage.setItem("userName", response.data.user.name);
+          localStorage.setItem("userEmail", response.data.user.email);
+          
+          // Get the return path from location state
+          const returnTo = location.state?.from;
+          
+          if (returnTo) {
+            navigate(returnTo);
+          } else {
+            navigate("/city-selection");
+          }
+        }
+      } catch (err) {
+        console.error("Login error:", err);
+        setError(err.response?.data?.message || "Login failed. Please try again.");
+      } finally {
+        setLoading(false);
       }
     } else {
       // Sign-Up
       if (password !== confirmPassword) {
-        alert("Passwords do not match");
+        setError("Passwords do not match");
         return;
       }
 
       if (!fullName || !email || !password) {
-        alert("Please fill in all fields");
+        setError("Please fill in all fields");
         return;
       }
 
-      alert("Registration successful! Please login.");
-      setIsLogin(true);
-      setFullName("");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
+      if (password.length < 6) {
+        setError("Password must be at least 6 characters long");
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        const response = await axios.post(`${API_URL}/auth/register`, {
+          name: fullName,
+          email,
+          password
+        });
+
+        if (response.data.token) {
+          alert("Registration successful! You are now logged in.");
+          
+          // Store token and user data
+          localStorage.setItem("token", response.data.token);
+          localStorage.setItem("userID", response.data.user.id);
+          localStorage.setItem("userName", response.data.user.name);
+          localStorage.setItem("userEmail", response.data.user.email);
+          
+          // Navigate to city selection
+          navigate("/city-selection");
+        }
+      } catch (err) {
+        console.error("Registration error:", err);
+        setError(err.response?.data?.message || "Registration failed. Please try again.");
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -107,12 +155,12 @@ export default function AuthPage() {
 
           {/* Toggle Buttons */}
           <div style={{ display: "flex", justifyContent: "center", gap: "12px", marginBottom: "18px" }}>
-            <button onClick={() => setIsLogin(true)} style={{
+            <button onClick={() => { setIsLogin(true); setError(""); }} style={{
               padding: "8px 18px", borderRadius: "10px", border: "1px solid rgba(255,255,255,0.32)",
               background: isLogin ? "rgba(255,255,255,0.26)" : "transparent",
               color: "white", cursor: "pointer", fontWeight: 600, backdropFilter: "blur(6px)"
             }}>Login</button>
-            <button onClick={() => setIsLogin(false)} style={{
+            <button onClick={() => { setIsLogin(false); setError(""); }} style={{
               padding: "8px 18px", borderRadius: "10px", border: "1px solid rgba(255,255,255,0.32)",
               background: !isLogin ? "rgba(255,255,255,0.26)" : "transparent",
               color: "white", cursor: "pointer", fontWeight: 600, backdropFilter: "blur(6px)"
@@ -122,6 +170,22 @@ export default function AuthPage() {
           <h3 style={{ textAlign: "center", margin: "6px 0 18px 0", fontWeight: 600 }}>
             {isLogin ? "Welcome back" : "Create your account"}
           </h3>
+
+          {/* Error Message */}
+          {error && (
+            <div style={{
+              background: "rgba(255, 0, 0, 0.2)",
+              border: "1px solid red",
+              color: "white",
+              padding: "10px",
+              borderRadius: "8px",
+              marginBottom: "15px",
+              fontSize: "14px",
+              textAlign: "center"
+            }}>
+              {error}
+            </div>
+          )}
 
           {/* Form */}
           <form onSubmit={handleSubmit}>
@@ -159,12 +223,14 @@ export default function AuthPage() {
                 }}
               />
             )}
-            <button type="submit" style={{
+            <button type="submit" disabled={loading} style={{
               width: "100%", padding: "12px", marginTop: "6px", borderRadius: "10px",
-              background: "rgba(0,0,0,0.45)", color: "white", border: "1px solid rgba(255,255,255,0.28)",
-              backdropFilter: "blur(6px)", cursor: "pointer", fontSize: "15px", fontWeight: 700
+              background: loading ? "rgba(0,0,0,0.25)" : "rgba(0,0,0,0.45)", 
+              color: "white", border: "1px solid rgba(255,255,255,0.28)",
+              backdropFilter: "blur(6px)", cursor: loading ? "not-allowed" : "pointer", 
+              fontSize: "15px", fontWeight: 700
             }}>
-              {isLogin ? "Login" : "Sign Up"}
+              {loading ? "Processing..." : (isLogin ? "Login" : "Sign Up")}
             </button>
           </form>
         </div>
