@@ -1,0 +1,52 @@
+.dashboard-container {
+  text-align: center;
+  padding: 30px;
+}
+
+/* Welcome text centered */
+.welcome-text {
+  font-size: 34px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #2b2b2b;
+}
+
+.welcome-subtext {
+  font-size: 16px;
+  color: #777;
+  margin-bottom: 40px;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+  padding: 20px 40px;
+}
+
+/* Stat Boxes */
+.stat-box {
+  background: white;
+  padding: 25px 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  transition: 0.25s ease-in-out;
+  cursor: pointer;
+}
+
+.stat-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+
+.stat-box h2 {
+  font-size: 36px;
+  margin-bottom: 8px;
+  color: #0d47a1;
+}
+
+.stat-box p {
+  font-size: 15px;
+  color: #333;
+}

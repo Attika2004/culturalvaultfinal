@@ -1,0 +1,122 @@
+.cities-container {
+  padding: 30px;
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: bold;
+  color: #1d1d1d;
+  text-align: center;
+}
+
+.page-subtext {
+  text-align: center;
+  color: #777;
+  margin-bottom: 30px;
+  font-size: 15px;
+}
+
+.cities-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  margin-bottom: 40px;
+}
+
+/* Box Sections */
+.city-section {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.city-section h2 {
+  margin-bottom: 15px;
+  font-size: 18px;
+  color: #0d47a1;
+}
+
+.city-section input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: #fafafa;
+}
+
+/* Buttons */
+.btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.add-btn {
+  background: #0d47a1;
+  color: white;
+}
+
+.update-btn {
+  background: #0277bd;
+  color: white;
+}
+
+.delete-btn {
+  background: #c62828;
+  color: white;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+/* View Section */
+.view-section {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.view-section h2 {
+  font-size: 20px;
+  color: #0d47a1;
+  margin-bottom: 15px;
+}
+
+.view-section input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: #fafafa;
+}
+
+/* Table */
+.cities-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cities-table th,
+.cities-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e5e5e5;
+  text-align: left;
+}
+
+.cities-table th {
+  background: #f3f6fa;
+  font-weight: bold;
+}
+
+.cities-table tr:hover {
+  background: #f9fbfd;
+}

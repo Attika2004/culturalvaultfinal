@@ -1,0 +1,81 @@
+/* Entire Admin Container */
+.admin-container {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f7fa !important; /* Light clean background */
+  font-family: "Arial", sans-serif;
+}
+
+/* Sidebar */
+.admin-sidebar {
+  width: 250px;
+  background: #180a66;
+  border-right: 1px solid #dcdcdc;
+  padding: 25px 15px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
+
+/* Sidebar Title */
+.sidebar-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* Menu items */
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #333;
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+.menu-item:hover {
+  background: #e8eef5;
+}
+
+.menu-item.active {
+  background: #d0e1ff;
+  color: #0d47a1;
+  font-weight: bold;
+}
+
+.logout {
+  margin-top: 40px;
+  background: #ffeded;
+  color: #d63031;
+}
+
+.logout:hover {
+  background: #ffdbdb;
+}
+
+/* Icons */
+.icon {
+  font-size: 18px;
+}
+
+/* Main Content Area */
+.admin-content {
+  margin-left: 250px; /* Space for sidebar */
+  padding: 30px;
+  width: 100%;
+  min-height: 100vh;
+  background: #f5f7fa;
+}

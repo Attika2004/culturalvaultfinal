@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./BadshahiMosque.css";
 
 const sampleImages = [
@@ -9,47 +10,15 @@ const sampleImages = [
 ];
 
 export default function BadshahiMosque() {
-  const [rating, setRating] = useState(4.5);
-  const [numRatings, setNumRatings] = useState(112);
-  const [numVisitors, setNumVisitors] = useState(380);
-
-  const [bookingData, setBookingData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    date: "",
-    guests: 1,
-  });
-
-  const [bookingStatus, setBookingStatus] = useState("");
+  const navigate = useNavigate();
+  
+  const [rating] = useState(4.5);
+  const [numRatings] = useState(112);
+  const [numVisitors] = useState(380);
 
   const [reviewText, setReviewText] = useState("");
   const [userRating, setUserRating] = useState(0);
   const [reviews, setReviews] = useState([]);
-
-  function handleInputChange(e) {
-    const { name, value } = e.target;
-    setBookingData((prev) => ({ ...prev, [name]: value }));
-  }
-
-  function handleBookingSubmit(e) {
-    e.preventDefault();
-    if (
-      !bookingData.name.trim() ||
-      !bookingData.email.trim() ||
-      !bookingData.phone.trim() ||
-      !bookingData.date.trim()
-    ) {
-      setBookingStatus("Please fill all required fields.");
-      return;
-    }
-
-    setBookingStatus(
-      `Thank you, ${bookingData.name}! Your tour booking for ${bookingData.date} has been sent. Our agent will contact you at ${bookingData.phone}.`
-    );
-
-    setBookingData({ name: "", email: "", phone: "", date: "", guests: 1 });
-  }
 
   function handleReviewSubmit(e) {
     e.preventDefault();
@@ -70,9 +39,7 @@ export default function BadshahiMosque() {
           playsInline
           className="video-bg"
           src="/badshaivideo.mp4"
-        >
-          Your browser does not support the video tag.
-        </video>
+        />
         <div className="video-overlay">
           <h1>Badshahi Mosque</h1>
         </div>
@@ -80,6 +47,7 @@ export default function BadshahiMosque() {
 
       {/* Content Section */}
       <div className="content-wrapper">
+        
         {/* Image Gallery */}
         <div className="image-gallery">
           {sampleImages.map((imgSrc, idx) => (
@@ -92,7 +60,7 @@ export default function BadshahiMosque() {
           ))}
         </div>
 
-        {/* Description and History */}
+        {/* Description */}
         <section className="description-section">
           <h2>About Badshahi Mosque</h2>
           <p>
@@ -108,7 +76,7 @@ export default function BadshahiMosque() {
           </p>
         </section>
 
-        {/* Rating and Visitor Stats */}
+        {/* Stats */}
         <section className="stats-section">
           <div className="stat-box">
             <h3>Rating</h3>
@@ -163,75 +131,7 @@ export default function BadshahiMosque() {
           </div>
         </section>
 
-        {/* Booking Form */}
-        <section className="booking-section">
-          <h2>Book a Tour</h2>
-          <form onSubmit={handleBookingSubmit} className="booking-form">
-            <label>
-              Name<span className="required">*</span>
-              <input
-                type="text"
-                name="name"
-                value={bookingData.name}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-
-            <label>
-              Email<span className="required">*</span>
-              <input
-                type="email"
-                name="email"
-                value={bookingData.email}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-
-            <label>
-              Phone<span className="required">*</span>
-              <input
-                type="tel"
-                name="phone"
-                value={bookingData.phone}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-
-            <label>
-              Date<span className="required">*</span>
-              <input
-                type="date"
-                name="date"
-                value={bookingData.date}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-
-            <label>
-              Number of Guests
-              <input
-                type="number"
-                name="guests"
-                value={bookingData.guests}
-                min="1"
-                max="20"
-                onChange={handleInputChange}
-              />
-            </label>
-
-            <button type="submit" className="btn-book">
-              Book Now
-            </button>
-          </form>
-
-          {bookingStatus && <p className="booking-status">{bookingStatus}</p>}
-        </section>
-
-        {/* Location Map */}
+        {/* Map */}
         <section className="map-section">
           <h2>Location</h2>
           <iframe
@@ -242,8 +142,7 @@ export default function BadshahiMosque() {
             style={{ border: 0 }}
             allowFullScreen=""
             loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-          ></iframe>
+          />
         </section>
       </div>
     </div>

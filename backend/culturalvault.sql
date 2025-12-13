@@ -193,20 +193,25 @@ GO
 ------------------------------------------
 -- 14. TravelBookings Table
 ------------------------------------------
-CREATE TABLE TravelBookings (
-    BookingID INT IDENTITY(1,1) PRIMARY KEY,
-    PackageID INT NOT NULL,
-    UserID INT NOT NULL,
-    BookingDate DATETIME DEFAULT GETDATE(),
-    Status VARCHAR(50) CHECK (Status IN ('Pending','Confirmed','Paid','Cancelled')),
-    NumPeople INT NOT NULL,
-    TotalAmount DECIMAL(10,2),
-    CreatedAt DATETIME DEFAULT GETDATE(),
-
-    FOREIGN KEY (PackageID) REFERENCES TravelPackages(PackageID),
-    FOREIGN KEY (UserID) REFERENCES Users(UserID)
-);
+USE CulturalVault;
 GO
+
+CREATE TABLE Bookings (
+    BookingID INT IDENTITY(1,1) PRIMARY KEY,
+    name NVARCHAR(100) NOT NULL,
+    email NVARCHAR(255) NOT NULL,
+    phone NVARCHAR(20) NOT NULL,
+    date DATE NOT NULL,
+    time NVARCHAR(10) NOT NULL,
+    guests INT NOT NULL,
+    selectedSites NVARCHAR(MAX) NOT NULL,
+    travelMode NVARCHAR(50) NOT NULL,
+    tourPackage NVARCHAR(50) NOT NULL,
+    specialRequests NVARCHAR(MAX),
+    totalCost INT NOT NULL,
+    bookingDate DATETIME DEFAULT GETDATE(),
+    status NVARCHAR(50) DEFAULT 'Confirmed'
+);
 
 ------------------------------------------
 -- 15. EventBookings Table
@@ -242,3 +247,5 @@ CREATE TABLE Payments (
     FOREIGN KEY (UserID) REFERENCES Users(UserID)
 );
 GO
+SELECT name FROM sys.databases;
+SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Bookings';

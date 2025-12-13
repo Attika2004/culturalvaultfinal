@@ -5,71 +5,75 @@ import "./LahoreSites.css";
 const sites = [
   {
     name: "Badshahi Mosque",
-    description:
-      "One of the largest mosques in the world, with stunning Mughal architecture.",
+    description: "One of the largest mosques in the world, with stunning Mughal architecture.",
     image: "/1.jpg",
+    route: "/badshahi-mosque"
   },
   {
     name: "Lahore Fort (Shahi Qila)",
-    description:
-      "This is probably the most charming and grand fort in entire Pakistan.",
+    description: "This is probably the most charming and grand fort in entire Pakistan.",
     image: "/2.jpg",
+    route: "/lahore-fort"
   },
   {
     name: "Walled City of Lahore",
-    description:
-      "The historic walled city area of Lahore with rich cultural heritage.",
+    description: "The historic walled city area of Lahore with rich cultural heritage.",
     image: "/3.jpg",
+    route: "/walled-city"
   },
   {
     name: "Wagah Border",
-    description:
-      "The ceremonial border crossing point between India and Pakistan.",
+    description: "The ceremonial border crossing point between India and Pakistan.",
     image: "/4.jpg",
+    route: "/wagah-border"
   },
   {
     name: "Minar-e-Pakistan",
-    description: "A national monument symbolizing Pakistan’s independence.",
+    description: "A national monument symbolizing Pakistan's independence.",
     image: "/5.jpg",
+    route: "/minar-e-pakistan"
   },
   {
     name: "Shalimar Gardens",
     description: "Mughal-era gardens, showcasing Islamic architecture and beauty.",
     image: "/6.jpg",
+    route: "/shalimar-gardens"
   },
   {
     name: "Wazir Khan Mosque",
-    description:
-      "A stunning mosque famous for its intricate tile work and frescoes.",
+    description: "A stunning mosque famous for its intricate tile work and frescoes.",
     image: "/7.jpg",
+    route: "/wazir-khan-mosque"
   },
   {
     name: "Lahore Museum",
-    description:
-      "A museum with artifacts and exhibits showcasing the region’s history.",
+    description: "A museum with artifacts and exhibits showcasing the region's history.",
     image: "/8.jpg",
+    route: "/lahore-museum"
   },
   {
     name: "Anarkali Bazaar",
     description: "One of the oldest surviving markets in South Asia.",
     image: "/9.jpg",
+    route: "/anarkali-bazaar"
   },
   {
     name: "Food Street (Fort Road)",
     description: "A vibrant street famous for its delicious local cuisine.",
     image: "/10.jpg",
+    route: "/food-street"
   },
   {
     name: "Tomb of Jahangir",
-    description:
-      "The mausoleum of Mughal Emperor Jahangir, with beautiful gardens.",
+    description: "The mausoleum of Mughal Emperor Jahangir, with beautiful gardens.",
     image: "/11.jpg",
+    route: "/jahangir-tomb"
   },
   {
     name: "Bagh-e-Jinnah (Lawrence Garden)",
-    description:
-      "A massive and historical park in the heart of the city, offering a peaceful green space, a botanical garden, and a public library.",
+    description: "A massive and historical park in the heart of the city.",
     image: "/12.jpg",
+    route: "/bagh-e-jinnah"
   },
 ];
 
@@ -77,47 +81,15 @@ export default function LahoreSites() {
   const navigate = useNavigate();
 
   function handleSiteClick(siteName) {
-    // Navigate to specific site page based on site name
-    switch (siteName) {
-      case "Badshahi Mosque":
-        navigate("/badshahi-mosque");
-        break;
-      case "Lahore Fort (Shahi Qila)":
-        navigate("/lahore-fort");
-        break;
-      case "Walled City of Lahore":
-        navigate("/walled-city");
-        break;
-      case "Wagah Border":
-        navigate("/wagah-border");
-        break;
-      case "Minar-e-Pakistan":
-        navigate("/minar-e-pakistan");
-        break;
-      case "Shalimar Gardens":
-        navigate("/shalimar-gardens");
-        break;
-      case "Wazir Khan Mosque":
-        navigate("/wazir-khan-mosque");
-        break;
-      case "Lahore Museum":
-        navigate("/lahore-museum");
-        break;
-      case "Anarkali Bazaar":
-        navigate("/anarkali-bazaar");
-        break;
-      case "Food Street (Fort Road)":
-        navigate("/food-street");
-        break;
-      case "Tomb of Jahangir":
-        navigate("/tomb-jahangir");
-        break;
-      case "Bagh-e-Jinnah (Lawrence Garden)":
-        navigate("/bagh-e-jinnah");
-        break;
-      default:
-        console.log("No page found for this site");
+    const site = sites.find(s => s.name === siteName);
+    if (site) {
+      navigate(site.route);
     }
+  }
+
+  function handleBookTour() {
+    // Always redirect to login page, regardless of login status
+    navigate("/auth", { state: { from: "/tour-booking" } });
   }
 
   return (
@@ -133,8 +105,8 @@ export default function LahoreSites() {
           <div
             key={idx}
             className="timeline-item"
-            style={{ cursor: "pointer" }}
             onClick={() => handleSiteClick(site.name)}
+            style={{ cursor: "pointer" }}
           >
             <div className="content-left">
               <img src={site.image} alt={site.name} />
@@ -149,6 +121,14 @@ export default function LahoreSites() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Book Tour Button at Bottom */}
+      <div className="book-tour-section-bottom">
+        <button onClick={handleBookTour} className="btn-book-tour-bottom">
+          📅 Book a Guided Tour
+        </button>
+        <p className="book-tour-subtitle">Plan your complete tour with our expert guides</p>
       </div>
     </div>
   );

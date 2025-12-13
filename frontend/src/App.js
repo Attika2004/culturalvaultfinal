@@ -1,10 +1,13 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
-
+import { Routes, Route, Navigate } from "react-router-dom";
 import AuthPage from "./pages/AuthPage";
 import CitySelection from "./pages/CitySelection";
 import LahoreOptions from "./pages/LahoreOptions";
 import LahoreSites from "./pages/LahoreSites";
+import AboutUs from "./pages/AboutUs";
+import TourBooking from "./pages/TourBooking";
+import MyBookings from "./pages/MyBookings";
+import LahoreEvents from "./pages/LahoreEvents";
 
 // Site pages
 import BadshahiMosque from "./pages/BadshahiMosque";
@@ -20,13 +23,26 @@ import Tomb from "./pages/Tomb";
 import Bagh from "./pages/Bagh";
 import Anarkali from "./pages/Anarkali";
 
+// Admin Pages
+import AdminDashboard from "./pages/AdminDashboard";
+import ManageCities from "./pages/ManageCities";
+import ManageSites from "./pages/ManageSites";
+import ManageAgents from "./pages/ManageAgents";
+import Bookings from "./pages/Bookings";
+
+
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<AuthPage />} />
+      {/* Public/User pages */}
+      <Route path="/" element={<CitySelection />} />
+      <Route path="/auth" element={<AuthPage />} />
       <Route path="/city-selection" element={<CitySelection />} />
       <Route path="/lahore-options" element={<LahoreOptions />} />
       <Route path="/lahore-sites" element={<LahoreSites />} />
+      <Route path="/about-us" element={<AboutUs />} />
+      <Route path="/book-tour" element={<TourBooking />} />
+      <Route path="/my-bookings" element={<MyBookings />} />
 
       <Route path="/badshahi-mosque" element={<BadshahiMosque />} />
       <Route path="/lahore-fort" element={<LahoreFort />} />
@@ -40,6 +56,17 @@ function App() {
       <Route path="/jahangir-tomb" element={<Tomb />} />
       <Route path="/bagh-e-jinnah" element={<Bagh />} />
       <Route path="/anarkali-bazaar" element={<Anarkali />} />
+      <Route path="/lahore-events" element={<LahoreEvents />} />
+      <Route path="/tour-booking" element={<TourBooking />} />
+      
+
+      {/* Admin routes */}
+      <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
+      <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route path="/admin/manage-cities" element={<ManageCities />} />
+      <Route path="/admin/manage-sites" element={<ManageSites />} />
+      <Route path="/admin/manage-agents" element={<ManageAgents />} />
+      <Route path="/admin/bookings" element={<Bookings />} />
     </Routes>
   );
 }

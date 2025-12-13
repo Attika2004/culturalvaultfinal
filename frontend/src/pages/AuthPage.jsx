@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -9,20 +9,41 @@ export default function AuthPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (isLogin) {
-      // Temporary login bypass
-      alert("Login successful!");
+      // Login
+      if (!email || !password) {
+        alert("Please fill in all fields");
+        return;
+      }
+
       localStorage.setItem("token", "dummy-token");
       localStorage.setItem("userID", "dummy-user");
-      navigate("/city-selection"); // Navigate to CitySelection page
+      localStorage.setItem("userName", email.split("@")[0]);
+      
+      // Get the return path from location state
+      const returnTo = location.state?.from;
+      
+      if (returnTo) {
+        // If there's a specific page to return to, go there
+        navigate(returnTo);
+      } else {
+        // Otherwise go to city selection
+        navigate("/city-selection");
+      }
     } else {
-      // Sign-Up (UI only for now)
+      // Sign-Up
       if (password !== confirmPassword) {
         alert("Passwords do not match");
+        return;
+      }
+
+      if (!fullName || !email || !password) {
+        alert("Please fill in all fields");
         return;
       }
 
@@ -51,6 +72,23 @@ export default function AuthPage() {
         display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000,
         borderBottom: "1px solid rgba(255, 255, 255, 0.2)"
       }}>
+        <button
+          onClick={() => navigate("/")}
+          style={{
+            position: "absolute",
+            left: "20px",
+            padding: "8px 16px",
+            background: "rgba(255, 255, 255, 0.2)",
+            backdropFilter: "blur(10px)",
+            border: "1px solid rgba(255, 255, 255, 0.3)",
+            borderRadius: "8px",
+            color: "white",
+            fontWeight: 600,
+            cursor: "pointer"
+          }}
+        >
+          ← Back
+        </button>
         <h1 style={{
           color: "white", fontSize: "28px", fontWeight: "600", letterSpacing: "1px",
           margin: 0, textShadow: "0 0 10px rgba(0,0,0,0.4)"
@@ -129,14 +167,6 @@ export default function AuthPage() {
               {isLogin ? "Login" : "Sign Up"}
             </button>
           </form>
-
-          {/* Admin Login */}
-          <div style={{ marginTop: "14px", display: "flex", justifyContent: "center" }}>
-            <button onClick={() => alert("Admin login (demo)")} style={{
-              padding: "8px 14px", borderRadius: "10px", border: "1px solid rgba(255,255,255,0.28)",
-              background: "transparent", color: "white", cursor: "pointer", fontWeight: 600
-            }}>Admin Login</button>
-          </div>
         </div>
       </div>
     </div>
