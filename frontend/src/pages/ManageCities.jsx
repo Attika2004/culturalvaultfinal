@@ -28,7 +28,8 @@ const ManageCities = () => {
   const fetchCities = async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/admin/cities");
-      setCities(res.data.cities || []);
+      // Response is now direct array
+      setCities(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error("Error fetching cities:", err);
       alert("Failed to fetch cities");
@@ -43,7 +44,8 @@ const ManageCities = () => {
     if (!newCityName) return alert("City name is required!");
 
     try {
-      await axios.post("http://localhost:5000/api/admin/cities/add", {
+      // Changed route from /add to direct POST
+      await axios.post("http://localhost:5000/api/admin/cities", {
         CityName: newCityName,
         Province: newProvince,
         Description: newDescription,
@@ -166,16 +168,22 @@ const ManageCities = () => {
               </tr>
             </thead>
             <tbody>
-              {cities.map(c => (
-                <tr key={c.CityID}>
-                  <td>{c.CityID}</td>
-                  <td>{c.CityName}</td>
-                  <td>{c.Province}</td>
-                  <td>{c.Description}</td>
-                  <td>{c.Latitude}</td>
-                  <td>{c.Longitude}</td>
+              {cities.length === 0 ? (
+                <tr>
+                  <td colSpan="6" style={{ textAlign: "center" }}>No cities found</td>
                 </tr>
-              ))}
+              ) : (
+                cities.map(c => (
+                  <tr key={c.CityID}>
+                    <td>{c.CityID}</td>
+                    <td>{c.CityName}</td>
+                    <td>{c.Province}</td>
+                    <td>{c.Description ? c.Description.substring(0, 50) + "..." : "N/A"}</td>
+                    <td>{c.Latitude}</td>
+                    <td>{c.Longitude}</td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

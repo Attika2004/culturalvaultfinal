@@ -44,7 +44,7 @@ function App() {
       <Route path="/" element={<CitySelection />} />
       <Route path="/auth" element={<AuthPage />} />
       <Route path="/city-selection" element={<CitySelection />} />
-      <Route path="/lahore-options" element={<LahoreOptions />} />
+      <Route path="/city/lahore/options" element={<LahoreOptions />} />
       <Route path="/lahore-sites" element={<LahoreSites />} />
       <Route path="/about-us" element={<AboutUs />} />
       <Route path="/book-tour" element={<TourBooking />} />
