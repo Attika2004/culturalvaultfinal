@@ -84,20 +84,20 @@ export default function WaghaBorder() {
           ))}
         </div>
 
-        {/* Description */}
-        <section className="description-section">
-          <h2>About Wagha Border</h2>
-          <p>
-            Wagha Border is the ceremonial border crossing between India and Pakistan,
-            famous for its daily flag-lowering ceremony. It is a symbol of patriotism
-            and draws large crowds every evening who come to witness the energetic
-            parade and show of national pride.
-          </p>
-          <p>
-            Visitors can enjoy the lively atmosphere, see the guards' performances,
-            and take in the historic significance of this international boundary.
-          </p>
-        </section>
+      <section className="description-section">
+  <h2>About Wagah Border</h2>
+  <p>
+    Wagah Border is the ceremonial border crossing between Pakistan and India, famous for the
+    daily flag-lowering ceremony performed by soldiers of both countries. It is a symbol of national pride.
+  </p>
+  <p>
+    📍 <b>Location:</b> Wagah, 30 km from Lahore city center<br/>
+    🕰️ <b>Visiting Hours:</b> Flag-lowering ceremony daily around sunset (timing varies with seasons)<br/>
+    🎫 <b>Entry Fee:</b> Small fee for entry to seating area<br/>
+    ⚠️ <b>Tips:</b> Arrive early for the best view. Patriotic flags and attire add to the experience. Avoid carrying large bags.
+  </p>
+</section>
+
 
         {/* Stats */}
         <section className="stats-section">
@@ -152,65 +152,7 @@ export default function WaghaBorder() {
           </div>
         </section>
 
-        {/* Booking */}
-        <section className="booking-section">
-          <h2>Book a Tour</h2>
-          <form onSubmit={handleBookingSubmit} className="booking-form">
-            <label>
-              Name<span className="required">*</span>
-              <input
-                type="text"
-                name="name"
-                value={bookingData.name}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-            <label>
-              Email<span className="required">*</span>
-              <input
-                type="email"
-                name="email"
-                value={bookingData.email}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-            <label>
-              Phone<span className="required">*</span>
-              <input
-                type="tel"
-                name="phone"
-                value={bookingData.phone}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-            <label>
-              Date<span className="required">*</span>
-              <input
-                type="date"
-                name="date"
-                value={bookingData.date}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-            <label>
-              Guests
-              <input
-                type="number"
-                name="guests"
-                value={bookingData.guests}
-                min="1"
-                max="20"
-                onChange={handleInputChange}
-              />
-            </label>
-            <button type="submit" className="btn-book">Book Now</button>
-          </form>
-          {bookingStatus && <p className="booking-status">{bookingStatus}</p>}
-        </section>
+       
 
         {/* Map */}
         <section className="map-section">

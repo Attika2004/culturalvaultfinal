@@ -1,0 +1,80 @@
+/* Entire Agent Container */
+.agent-container {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f7fa !important;
+  font-family: "Arial", sans-serif;
+}
+
+/* Sidebar */
+.agent-sidebar {
+  width: 250px;
+  background: #0d7377;
+  border-right: 1px solid #dcdcdc;
+  padding: 25px 15px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
+
+/* Sidebar Title */
+.sidebar-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* Menu items */
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+.menu-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.menu-item.active {
+  background: rgba(255, 255, 255, 0.2);
+  font-weight: bold;
+}
+
+.logout {
+  margin-top: 40px;
+  background: #ffeded;
+  color: #d63031;
+}
+
+.logout:hover {
+  background: #ffdbdb;
+}
+
+/* Icons */
+.icon {
+  font-size: 18px;
+}
+
+/* Main Content Area */
+.agent-content {
+  margin-left: 250px;
+  padding: 30px;
+  width: 100%;
+  min-height: 100vh;
+  background: #f5f7fa;
+}

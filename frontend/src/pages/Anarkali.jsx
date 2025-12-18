@@ -78,12 +78,19 @@ export default function Bagh() {
 
         {/* DESCRIPTION */}
         <section className="description-section">
-          <h2>Anarkali Bazaar</h2>
-          <p>
-      Anarkali Bazaar is a historic marketplace located in Lahore, Pakistan, known for its rich history and vibrant atmosphere.
-Named after the legendary courtesan Anarkali, the bazaar dates back over 200 years and is a significant part of Lahore's cultural heritage.
-          </p>
-        </section>
+  <h2>About Anarkali Bazaar</h2>
+  <p>
+    Anarkali Bazaar is one of the oldest and most famous shopping streets in Lahore.
+    It offers a wide range of traditional clothes, handicrafts, jewelry, and street food.
+  </p>
+  <p>
+    📍 <b>Location:</b> Near Old City, Lahore, close to Mall Road<br/>
+    🕰️ <b>Visiting Hours:</b> Daily 10:00 AM – 10:00 PM<br/>
+    🎫 <b>Entry Fee:</b> Free<br/>
+    ⚠️ <b>Tips:</b> Bargaining is common. Best visited in the evening for vibrant crowds. Carry cash and keep your belongings safe.
+  </p>
+</section>
+
 
         {/* STATS */}
         <section className="stats-section">
@@ -138,35 +145,7 @@ Named after the legendary courtesan Anarkali, the bazaar dates back over 200 yea
           </div>
         </section>
 
-        {/* BOOKING */}
-        <section className="booking-section">
-          <h2>Book a Tour</h2>
-          <form onSubmit={handleBookingSubmit} className="booking-form">
-            <label>Name*
-              <input name="name" value={bookingData.name} onChange={handleInputChange} />
-            </label>
-
-            <label>Email*
-              <input name="email" value={bookingData.email} onChange={handleInputChange} />
-            </label>
-
-            <label>Phone*
-              <input name="phone" value={bookingData.phone} onChange={handleInputChange} />
-            </label>
-
-            <label>Date*
-              <input type="date" name="date" value={bookingData.date} onChange={handleInputChange} />
-            </label>
-
-            <label>Guests
-              <input type="number" name="guests" value={bookingData.guests} onChange={handleInputChange} />
-            </label>
-
-            <button className="btn-book">Book Now</button>
-          </form>
-          {bookingStatus && <p className="booking-status">{bookingStatus}</p>}
-        </section>
-
+       
         {/* MAP */}
         <section className="map-section">
           <h2>Location</h2>

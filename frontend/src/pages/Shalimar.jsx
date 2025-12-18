@@ -89,13 +89,20 @@ export default function Shalimar() {
 
         {/* DESCRIPTION */}
         <section className="description-section">
-          <h2>About Shalimar Gardens</h2>
-          <p>
-            Shalimar Gardens, built during the Mughal era in Lahore, Pakistan,
-            is a magnificent example of Mughal garden architecture. Created by Emperor Shah Jahan,
-            it is famous for its terraced layout, flowing water fountains, and beautifully landscaped gardens.
-          </p>
-        </section>
+  <h2>About Shalimar Gardens</h2>
+  <p>
+    Shalimar Gardens is a stunning example of Mughal garden design, built in 1641 by Emperor Shah Jahan.
+    It features three terraces, flowing water channels, fountains, and beautiful floral arrangements.
+  </p>
+  <p>
+    📍 <b>Location:</b> Shalimar, Lahore, near Shahdara Bagh<br/>
+    🕰️ <b>Visiting Hours:</b> Daily 9:00 AM – 6:00 PM<br/>
+    🎫 <b>Entry Fee:</b> Small fee for locals; slightly higher for foreigners<br/>
+    👕 <b>Dress Code:</b> Modest clothing<br/>
+    ⚠️ <b>Tips:</b> Ideal for photography, picnics, and nature walks. Early morning is best for a peaceful visit.
+  </p>
+</section>
+
 
         {/* STATS */}
         <section className="stats-section">
@@ -150,34 +157,7 @@ export default function Shalimar() {
           </div>
         </section>
 
-        {/* BOOKING */}
-        <section className="booking-section">
-          <h2>Book a Tour</h2>
-          <form onSubmit={handleBookingSubmit} className="booking-form">
-            <label>Name*
-              <input name="name" value={bookingData.name} onChange={handleInputChange} />
-            </label>
-
-            <label>Email*
-              <input name="email" value={bookingData.email} onChange={handleInputChange} />
-            </label>
-
-            <label>Phone*
-              <input name="phone" value={bookingData.phone} onChange={handleInputChange} />
-            </label>
-
-            <label>Date*
-              <input type="date" name="date" value={bookingData.date} onChange={handleInputChange} />
-            </label>
-
-            <label>Guests
-              <input type="number" name="guests" value={bookingData.guests} onChange={handleInputChange} />
-            </label>
-
-            <button className="btn-book">Book Now</button>
-          </form>
-          {bookingStatus && <p className="booking-status">{bookingStatus}</p>}
-        </section>
+       
 
         {/* MAP */}
         <section className="map-section">

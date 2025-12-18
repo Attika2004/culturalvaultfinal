@@ -88,14 +88,21 @@ export default function Minar() {
         </div>
 
         {/* DESCRIPTION */}
-        <section className="description-section">
-          <h2>About Minar-e-Pakistan</h2>
-          <p>
-            Minar-e-Pakistan is a national monument located in Iqbal Park, Lahore.
-            It was built to commemorate the Lahore Resolution passed on 23rd March 1940,
-            which led to the creation of Pakistan. The monument combines modern and Mughal architectural styles.
-          </p>
-        </section>
+       <section className="description-section">
+  <h2>About Minar-e-Pakistan</h2>
+  <p>
+    Minar-e-Pakistan is a national monument in Iqbal Park, Lahore, built to
+    commemorate the Lahore Resolution passed on 23rd March 1940, which led to the
+    creation of Pakistan. The monument combines modern and Mughal architectural styles.
+  </p>
+  <p>
+    📍 <b>Location:</b> Iqbal Park, Lahore, near Lahore Fort and Badshahi Mosque<br/>
+    🕰️ <b>Visiting Hours:</b> Daily 8:00 AM – 8:00 PM<br/>
+    🎫 <b>Entry Fee:</b> Free<br/>
+    ⚠️ <b>Tips:</b> Best visited in the evening for sunset photos; combine with nearby landmarks for a full cultural tour.
+  </p>
+</section>
+
 
         {/* STATS */}
         <section className="stats-section">
@@ -150,35 +157,7 @@ export default function Minar() {
           </div>
         </section>
 
-        {/* BOOKING */}
-        <section className="booking-section">
-          <h2>Book a Tour</h2>
-          <form onSubmit={handleBookingSubmit} className="booking-form">
-            <label>Name*
-              <input name="name" value={bookingData.name} onChange={handleInputChange} />
-            </label>
-
-            <label>Email*
-              <input name="email" value={bookingData.email} onChange={handleInputChange} />
-            </label>
-
-            <label>Phone*
-              <input name="phone" value={bookingData.phone} onChange={handleInputChange} />
-            </label>
-
-            <label>Date*
-              <input type="date" name="date" value={bookingData.date} onChange={handleInputChange} />
-            </label>
-
-            <label>Guests
-              <input type="number" name="guests" value={bookingData.guests} onChange={handleInputChange} />
-            </label>
-
-            <button className="btn-book">Book Now</button>
-          </form>
-          {bookingStatus && <p className="booking-status">{bookingStatus}</p>}
-        </section>
-
+       
         {/* MAP */}
         <section className="map-section">
           <h2>Location</h2>

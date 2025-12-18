@@ -75,17 +75,20 @@ export default function FoodStreet() {
         </div>
 
         <section className="description-section">
-          <h2>About Food Street</h2>
-          <p>
-            Lahore's Food Street, located on Fort Road near the historic Badshahi Mosque,
-            is a bustling hub for local delicacies, offering a wide variety of Pakistani cuisine
-            in an open-air, vibrant atmosphere. It's a must-visit for tourists and locals alike.
-          </p>
-          <p>
-            Visitors can enjoy traditional dishes, street food, and live cultural ambiance,
-            making it a unique culinary experience in the heart of Lahore.
-          </p>
-        </section>
+  <h2>About Food Street</h2>
+  <p>
+    Lahore's Food Street, located on Fort Road near Badshahi Mosque, is a bustling hub
+    for traditional Pakistani cuisine. Visitors can enjoy street food, live cultural
+    ambiance, and beautiful views of historical landmarks.
+  </p>
+  <p>
+    📍 <b>Location:</b> Fort Road, Lahore, opposite Badshahi Mosque<br/>
+    🕰️ <b>Visiting Hours:</b> Daily 5:00 PM – 12:00 AM<br/>
+    🎫 <b>Entry Fee:</b> Free (pay for food)<br/>
+    ⚠️ <b>Tips:</b> Best during evening; peak hours can be crowded; ideal for photos with illuminated monuments.
+  </p>
+</section>
+
 
         <section className="stats-section">
           <div className="stat-box">
@@ -128,29 +131,6 @@ export default function FoodStreet() {
               </div>
             ))}
           </div>
-        </section>
-
-        <section className="booking-section">
-          <h2>Book a Tour</h2>
-          <form onSubmit={handleBookingSubmit} className="booking-form">
-            <label>Name<span className="required">*</span>
-              <input type="text" name="name" value={bookingData.name} onChange={handleInputChange} required />
-            </label>
-            <label>Email<span className="required">*</span>
-              <input type="email" name="email" value={bookingData.email} onChange={handleInputChange} required />
-            </label>
-            <label>Phone<span className="required">*</span>
-              <input type="tel" name="phone" value={bookingData.phone} onChange={handleInputChange} required />
-            </label>
-            <label>Date<span className="required">*</span>
-              <input type="date" name="date" value={bookingData.date} onChange={handleInputChange} required />
-            </label>
-            <label>Guests
-              <input type="number" name="guests" value={bookingData.guests} min="1" max="20" onChange={handleInputChange} />
-            </label>
-            <button type="submit" className="btn-book">Book Now</button>
-          </form>
-          {bookingStatus && <p className="booking-status">{bookingStatus}</p>}
         </section>
 
         <section className="map-section">

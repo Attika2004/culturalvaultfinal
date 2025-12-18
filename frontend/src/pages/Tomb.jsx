@@ -86,18 +86,20 @@ export default function Tomb() {
 
         {/* Description */}
         <section className="description-section">
-          <h2>About Jahangir Tomb</h2>
-          <p>
-            Jahangir Tomb, located in Shahdara Bagh, Lahore, is the final resting place
-            of the Mughal Emperor Jahangir. This magnificent mausoleum showcases
-            Mughal architecture with intricate marble work, lush gardens, and historical
-            significance.
-          </p>
-          <p>
-            Visitors can enjoy the serene atmosphere, explore the surrounding gardens,
-            and learn about the rich Mughal heritage through this monumental tomb.
-          </p>
-        </section>
+  <h2>About Tomb of Jahangir</h2>
+  <p>
+    The Tomb of Jahangir is the final resting place of the Mughal Emperor Jahangir, built in 1673.
+    It is a beautiful garden tomb, showcasing Mughal architecture, frescoes, and detailed marble work.
+  </p>
+  <p>
+    📍 <b>Location:</b> Shahdara Bagh, Lahore, along the Ravi River<br/>
+    🕰️ <b>Visiting Hours:</b> Daily 8:00 AM – 6:00 PM<br/>
+    🎫 <b>Entry Fee:</b> Small fee for locals; moderate for foreigners<br/>
+    👕 <b>Dress Code:</b> Modest clothing; comfortable shoes recommended<br/>
+    ⚠️ <b>Tips:</b> Combine visit with nearby Tomb of Asif Khan. Early morning is peaceful and less crowded.
+  </p>
+</section>
+
 
         {/* Stats */}
         <section className="stats-section">
@@ -152,66 +154,7 @@ export default function Tomb() {
           </div>
         </section>
 
-        {/* Booking */}
-        <section className="booking-section">
-          <h2>Book a Tour</h2>
-          <form onSubmit={handleBookingSubmit} className="booking-form">
-            <label>
-              Name<span className="required">*</span>
-              <input
-                type="text"
-                name="name"
-                value={bookingData.name}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-            <label>
-              Email<span className="required">*</span>
-              <input
-                type="email"
-                name="email"
-                value={bookingData.email}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-            <label>
-              Phone<span className="required">*</span>
-              <input
-                type="tel"
-                name="phone"
-                value={bookingData.phone}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-            <label>
-              Date<span className="required">*</span>
-              <input
-                type="date"
-                name="date"
-                value={bookingData.date}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-            <label>
-              Guests
-              <input
-                type="number"
-                name="guests"
-                value={bookingData.guests}
-                min="1"
-                max="20"
-                onChange={handleInputChange}
-              />
-            </label>
-            <button type="submit" className="btn-book">Book Now</button>
-          </form>
-          {bookingStatus && <p className="booking-status">{bookingStatus}</p>}
-        </section>
-
+       
         {/* Map */}
         <section className="map-section">
           <h2>Location</h2>

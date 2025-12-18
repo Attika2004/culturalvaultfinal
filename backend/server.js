@@ -13,6 +13,8 @@ const guideRoutes = require('./routes/guideRoutes');
 const travelPackageRoutes = require('./routes/travelPackageRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const agentRoutes = require('./routes/agentRoutes');
 
 const app = express();
 app.use(cors());
@@ -35,6 +37,9 @@ app.use('/api/guides', guideRoutes);
 app.use('/api/travel-packages', travelPackageRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/agents', agentRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

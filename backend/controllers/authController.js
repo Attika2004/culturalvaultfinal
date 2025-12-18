@@ -42,7 +42,7 @@ exports.registerUser = async (req, res) => {
 
         // Generate token
         const token = jwt.sign(
-            { userID: newUser.UserID, email: newUser.email },
+            { userID: newUser.UserID, email: newUser.Email },
             JWT_SECRET,
             { expiresIn: "7d" }
         );
@@ -102,5 +102,77 @@ exports.loginUser = async (req, res) => {
     } catch (err) {
         console.error("Login error:", err);
         res.status(500).json({ error: err.message });
+    }
+};
+
+// Verify JWT token
+exports.verifyToken = async (req, res) => {
+    try {
+        // Get token from Authorization header
+        const authHeader = req.headers.authorization;
+        
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return res.status(401).json({ 
+                success: false,
+                valid: false,
+                message: 'No token provided' 
+            });
+        }
+
+        const token = authHeader.split(' ')[1];
+
+        // Verify the token
+        const decoded = jwt.verify(token, JWT_SECRET);
+
+        // Optionally, fetch user from database to ensure they still exist
+        const pool = await connectDB();
+        const result = await pool.request()
+            .input("userID", sql.Int, decoded.userID)
+            .query("SELECT UserID, FirstName, LastName, Email FROM Users WHERE UserID = @userID");
+
+        if (result.recordset.length === 0) {
+            return res.status(401).json({ 
+                success: false,
+                valid: false,
+                message: 'User not found' 
+            });
+        }
+
+        const user = result.recordset[0];
+
+        res.json({ 
+            success: true,
+            valid: true,
+            message: 'Token is valid',
+            user: {
+                id: user.UserID,
+                name: `${user.FirstName} ${user.LastName}`.trim(),
+                email: user.Email
+            }
+        });
+
+    } catch (err) {
+        if (err.name === 'JsonWebTokenError') {
+            return res.status(401).json({ 
+                success: false,
+                valid: false,
+                message: 'Invalid token' 
+            });
+        }
+        
+        if (err.name === 'TokenExpiredError') {
+            return res.status(401).json({ 
+                success: false,
+                valid: false,
+                message: 'Token expired' 
+            });
+        }
+
+        console.error("Token verification error:", err);
+        res.status(500).json({ 
+            success: false,
+            valid: false,
+            message: 'Server error during token verification' 
+        });
     }
 };

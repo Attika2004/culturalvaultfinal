@@ -12,15 +12,25 @@ exports.getAllUsers = async (req, res) => {
 
 exports.getAllBookings = async (req, res) => {
   try {
+    console.log("Admin: Fetching all bookings...");
     const pool = await connectDB();
     const result = await pool.request().query(`
-      SELECT B.*, U.name, U.email
-      FROM Bookings B
-      JOIN Users U ON B.userId = U.id
-      ORDER BY B.createdAt DESC
+      SELECT * FROM Bookings
+      ORDER BY bookingDate DESC
     `);
-    res.json(result.recordset);
+    
+    console.log(`Admin: Found ${result.recordset.length} bookings`);
+    
+    res.json({
+      success: true,
+      count: result.recordset.length,
+      bookings: result.recordset
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Admin: Error fetching bookings:", err);
+    res.status(500).json({ 
+      error: err.message,
+      success: false
+    });
   }
 };

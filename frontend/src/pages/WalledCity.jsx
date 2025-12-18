@@ -86,18 +86,18 @@ export default function WalledCity() {
 
         {/* Description */}
         <section className="description-section">
-          <h2>About Walled City of Lahore</h2>
-          <p>
-            The Walled City of Lahore, also known as the Old City, is a historic
-            area filled with narrow streets, ancient havelis, and bustling bazaars.
-            It is a hub of culture, architecture, and history, offering a glimpse
-            into Lahore's rich Mughal and colonial past.
-          </p>
-          <p>
-            Visitors can explore gates, forts, mosques, and traditional marketplaces,
-            making it a must-visit destination for cultural enthusiasts.
-          </p>
-        </section>
+  <h2>About Walled City of Lahore</h2>
+  <p>
+    The Walled City is the historic core of Lahore, full of narrow streets, old havelis, markets, mosques,
+    and cultural heritage sites. Walking tours here reveal the history, architecture, and daily life of the city.
+  </p>
+  <p>
+    📍 <b>Location:</b> Old City, Lahore<br/>
+    🕰️ <b>Visiting Hours:</b> Daily 8:00 AM – 8:00 PM<br/>
+    🎫 <b>Entry Fee:</b> Free for general walking; guided tours may have fees<br/>
+    ⚠️ <b>Tips:</b> Wear comfortable shoes. Guided tours recommended to explore hidden gems. Best visited early morning or late afternoon.
+  </p>
+</section>
 
         {/* Stats */}
         <section className="stats-section">
@@ -152,66 +152,7 @@ export default function WalledCity() {
           </div>
         </section>
 
-        {/* Booking */}
-        <section className="booking-section">
-          <h2>Book a Tour</h2>
-          <form onSubmit={handleBookingSubmit} className="booking-form">
-            <label>
-              Name<span className="required">*</span>
-              <input
-                type="text"
-                name="name"
-                value={bookingData.name}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-            <label>
-              Email<span className="required">*</span>
-              <input
-                type="email"
-                name="email"
-                value={bookingData.email}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-            <label>
-              Phone<span className="required">*</span>
-              <input
-                type="tel"
-                name="phone"
-                value={bookingData.phone}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-            <label>
-              Date<span className="required">*</span>
-              <input
-                type="date"
-                name="date"
-                value={bookingData.date}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-            <label>
-              Guests
-              <input
-                type="number"
-                name="guests"
-                value={bookingData.guests}
-                min="1"
-                max="20"
-                onChange={handleInputChange}
-              />
-            </label>
-            <button type="submit" className="btn-book">Book Now</button>
-          </form>
-          {bookingStatus && <p className="booking-status">{bookingStatus}</p>}
-        </section>
-
+       
         {/* Map */}
         <section className="map-section">
           <h2>Location</h2>

@@ -77,15 +77,22 @@ export default function WazirKhan() {
         </div>
 
         {/* DESCRIPTION */}
-        <section className="description-section">
-          <h2>About Wazir Khan Mosque</h2>
-          <p>
-            Wazir Khan Mosque, built in the 17th century during the reign of Emperor Shah Jahan,
-            is a masterpiece of Mughal architecture and is famous for its intricate faience tile work.
-            Located in the heart of Lahore, it is a cultural and historical landmark attracting visitors
-            from all over the world.
-          </p>
-        </section>
+       <section className="description-section">
+  <h2>About Wazir Khan Mosque</h2>
+  <p>
+    Wazir Khan Mosque, built in the 17th century during the reign of Emperor Shah Jahan,
+    is a masterpiece of Mughal architecture. It is famous for its intricate faience tile work
+    and frescoes. Located in Lahore's Walled City, it is a major cultural and historical landmark.
+  </p>
+  <p>
+    📍 <b>Location:</b> Walled City of Lahore, near Delhi Gate<br/>
+    🕰️ <b>Visiting Hours:</b> Daily 8:00 AM – 6:00 PM; closed during Friday prayers<br/>
+    🎫 <b>Entry Fee:</b> Free<br/>
+    👕 <b>Dress Code:</b> Modest clothing; headscarf for women recommended<br/>
+    ⚠️ <b>Tips:</b> Photography allowed but avoid during prayers; carry water; combine visit with a walk through the Walled City.
+  </p>
+</section>
+
 
         {/* STATS */}
         <section className="stats-section">
@@ -140,34 +147,7 @@ export default function WazirKhan() {
           </div>
         </section>
 
-        {/* BOOKING */}
-        <section className="booking-section">
-          <h2>Book a Tour</h2>
-          <form onSubmit={handleBookingSubmit} className="booking-form">
-            <label>Name*
-              <input name="name" value={bookingData.name} onChange={handleInputChange} />
-            </label>
-
-            <label>Email*
-              <input name="email" value={bookingData.email} onChange={handleInputChange} />
-            </label>
-
-            <label>Phone*
-              <input name="phone" value={bookingData.phone} onChange={handleInputChange} />
-            </label>
-
-            <label>Date*
-              <input type="date" name="date" value={bookingData.date} onChange={handleInputChange} />
-            </label>
-
-            <label>Guests
-              <input type="number" name="guests" value={bookingData.guests} onChange={handleInputChange} />
-            </label>
-
-            <button className="btn-book">Book Now</button>
-          </form>
-          {bookingStatus && <p className="booking-status">{bookingStatus}</p>}
-        </section>
+        
 
         {/* MAP */}
         <section className="map-section">

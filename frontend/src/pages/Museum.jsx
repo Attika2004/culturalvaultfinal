@@ -78,14 +78,19 @@ export default function Museum() {
 
         {/* DESCRIPTION */}
         <section className="description-section">
-          <h2>About Lahore Museum</h2>
-          <p>
-            Lahore Museum is one of the oldest and largest museums in Pakistan.
-            It houses an extensive collection of Buddhist art, Mughal and Sikh artifacts,
-            and paintings from different eras of the subcontinent.
-            Visitors can explore centuries of history and cultural heritage here.
-          </p>
-        </section>
+  <h2>About Lahore Museum</h2>
+  <p>
+    Lahore Museum is one of Pakistan’s largest and oldest museums, showcasing Gandhara art, Mughal artifacts,
+    Islamic art, and cultural heritage of Pakistan. The building itself is a fine example of Indo-Saracenic architecture.
+  </p>
+  <p>
+    📍 <b>Location:</b> Mall Road, Lahore<br/>
+    🕰️ <b>Visiting Hours:</b> Tuesday to Sunday, 9:00 AM – 5:00 PM; closed on Monday<br/>
+    🎫 <b>Entry Fee:</b> Small fee for locals; moderate for foreigners<br/>
+    ⚠️ <b>Tips:</b> Photography may be restricted in certain sections. Allocate 2–3 hours to explore. Guided tours available.
+  </p>
+</section>
+
 
         {/* STATS */}
         <section className="stats-section">
@@ -140,34 +145,7 @@ export default function Museum() {
           </div>
         </section>
 
-        {/* BOOKING */}
-        <section className="booking-section">
-          <h2>Book a Tour</h2>
-          <form onSubmit={handleBookingSubmit} className="booking-form">
-            <label>Name*
-              <input name="name" value={bookingData.name} onChange={handleInputChange} />
-            </label>
-
-            <label>Email*
-              <input name="email" value={bookingData.email} onChange={handleInputChange} />
-            </label>
-
-            <label>Phone*
-              <input name="phone" value={bookingData.phone} onChange={handleInputChange} />
-            </label>
-
-            <label>Date*
-              <input type="date" name="date" value={bookingData.date} onChange={handleInputChange} />
-            </label>
-
-            <label>Guests
-              <input type="number" name="guests" value={bookingData.guests} onChange={handleInputChange} />
-            </label>
-
-            <button className="btn-book">Book Now</button>
-          </form>
-          {bookingStatus && <p className="booking-status">{bookingStatus}</p>}
-        </section>
+        
 
         {/* MAP */}
         <section className="map-section">

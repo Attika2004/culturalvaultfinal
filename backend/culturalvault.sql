@@ -228,6 +228,30 @@ CREATE TABLE EventBookings (
 );
 GO
 
+-- Drop existing table if you want to start fresh (WARNING: This deletes all data)
+-- DROP TABLE IF EXISTS Bookings;
+
+-- Create or update Bookings table
+CREATE TABLE Bookings (
+    BookingID INT IDENTITY(1,1) PRIMARY KEY,
+    name NVARCHAR(100) NOT NULL,
+    email NVARCHAR(255) NOT NULL,
+    phone NVARCHAR(20) NOT NULL,
+    date DATE NOT NULL,
+    time NVARCHAR(50) NOT NULL,
+    guests INT NOT NULL,
+    selectedSites NVARCHAR(MAX) NOT NULL,
+    travelMode NVARCHAR(50) NOT NULL,
+    tourPackage NVARCHAR(50) NOT NULL,
+    specialRequests NVARCHAR(MAX),
+    totalCost INT NOT NULL,
+    bookingDate DATETIME DEFAULT GETDATE(),
+    status NVARCHAR(50) DEFAULT 'Confirmed',
+    agentName NVARCHAR(100),
+    agentPhone NVARCHAR(20),
+    agentEmail NVARCHAR(255)
+);
+
 ------------------------------------------
 -- 16. Payments Table
 ------------------------------------------
@@ -246,3 +270,54 @@ CREATE TABLE Payments (
 GO
 SELECT name FROM sys.databases;
 SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Bookings';
+
+USE CulturalVault;
+GO
+
+-- Increase time column length to store time ranges
+ALTER TABLE Bookings
+ALTER COLUMN time NVARCHAR(50);
+GO
+
+-- Create Agents table if not exists
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Agents')
+BEGIN
+    CREATE TABLE Agents (
+        AgentID INT IDENTITY(1,1) PRIMARY KEY,
+        name NVARCHAR(100) NOT NULL,
+        email NVARCHAR(255) UNIQUE NOT NULL,
+        password NVARCHAR(255) NOT NULL,
+        phone NVARCHAR(20),
+        city NVARCHAR(100),
+        approved BIT DEFAULT 1,
+        createdAt DATETIME DEFAULT GETDATE()
+    );
+END
+GO
+
+
+
+-- Insert sample agents for testing
+INSERT INTO Agents (name, email, password, phone, city, approved)
+VALUES 
+('Ahmed Khan', 'ahmed@agent.com', '$2a$10$XqZ7rY5qW3kF8nM9lP2jO.YzH6vK4tU1wE0xR5mN8pL9qA3bC7dE6', '+92 300 1234567', 'Lahore', 1),
+('Sara Ali', 'sara@agent.com', '$2a$10$XqZ7rY5qW3kF8nM9lP2jO.YzH6vK4tU1wE0xR5mN8pL9qA3bC7dE6', '+92 301 9876543', 'Lahore', 1);
+GO
+
+UPDATE Agents
+SET password = '$2b$10$a5x0PmA62ALLGEnuFIyZhOEDGJ5taHU6o4MeevvJa8W3457hSgjhm'
+WHERE email = 'ahmed@agent.com';
+
+UPDATE Agents
+SET password = ' $2b$10$ofjzhWrlv9Aur4Vhozzxc.OjJfXLPLKgF7LGdZVB.HGyeXDfqTpHG'
+WHERE email = 'sara@agent.com';
+
+-- Check current data type
+SELECT 
+    COLUMN_NAME,
+    DATA_TYPE,
+    CHARACTER_MAXIMUM_LENGTH
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'Bookings' AND COLUMN_NAME = 'time';
+GO
+

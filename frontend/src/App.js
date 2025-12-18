@@ -30,6 +30,11 @@ import ManageSites from "./pages/ManageSites";
 import ManageAgents from "./pages/ManageAgents";
 import Bookings from "./pages/Bookings";
 
+// Agent Pages
+import AgentLogin from "./pages/AgentLogin";
+import AgentDashboard from "./pages/AgentDashboard";
+import AgentViewBookings from "./pages/AgentViewBookings";
+
 
 function App() {
   return (
@@ -67,6 +72,14 @@ function App() {
       <Route path="/admin/manage-sites" element={<ManageSites />} />
       <Route path="/admin/manage-agents" element={<ManageAgents />} />
       <Route path="/admin/bookings" element={<Bookings />} />
+
+      {/* Agent routes */}
+      <Route path="/agent/login" element={<AgentLogin />} />
+    <Route path="/agent" element={<Navigate to="/agent/dashboard" />} />
+<Route path="/agent/dashboard" element={<AgentDashboard />} />
+<Route path="/agent/view-bookings" element={<AgentViewBookings />} />
+      
+     
     </Routes>
   );
 }

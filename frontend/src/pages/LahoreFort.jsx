@@ -88,19 +88,29 @@ export default function LahoreFort() {
         </div>
 
         {/* DESCRIPTION */}
-        <section className="description-section">
-          <h2>About Lahore Fort</h2>
-          <p>
-            The Lahore Fort, also known as Shahi Qila, is a UNESCO World Heritage
-            Site and one of the most iconic structures of the Mughal Empire.
-            Built and expanded by various Mughal emperors, it stands as a
-            majestic symbol of art, culture, and architectural excellence.
-          </p>
-          <p>
-            Featuring Sheesh Mahal, Alamgiri Gate, Naulakha Pavilion, and other
-            royal complexes, the Fort showcases grandeur and historical richness.
-          </p>
-        </section>
+       <section className="description-section">
+  <h2>About Lahore Fort</h2>
+  <p>
+    Lahore Fort, also called Shahi Qila, is a UNESCO World Heritage Site located
+    in the heart of Lahore, next to Badshahi Mosque. It was built and expanded by
+    various Mughal emperors and stands as a majestic symbol of art, culture, and
+    architectural excellence.
+  </p>
+  <p>
+    Key attractions include Sheesh Mahal, Alamgiri Gate, Naulakha Pavilion, and
+    royal gardens. The Fort showcases grandeur, intricate frescoes, and Mughal
+    architecture.
+  </p>
+  <p>
+    📍 <b>Location:</b> Inside Lahore Walled City, near Badshahi Mosque and Food Street.<br/>
+    🕰️ <b>Visiting Hours:</b> Daily 9:00 AM – 5:00 PM<br/>
+    🎫 <b>Entry Fee:</b> Small fee for locals; slightly higher for foreign tourists<br/>
+    👕 <b>Dress Code:</b> Modest clothing; comfortable shoes for walking<br/>
+    📌 <b>Nearby:</b> Badshahi Mosque, Minar-e-Pakistan, Fort Road Food Street<br/>
+    ⚠️ <b>Tips:</b> Guided tours available; best visited early morning for fewer crowds.
+  </p>
+</section>
+
 
         {/* STATS */}
         <section className="stats-section">
@@ -156,42 +166,7 @@ export default function LahoreFort() {
           </div>
         </section>
 
-        {/* BOOKING */}
-        <section className="booking-section">
-          <h2>Book a Tour</h2>
-
-          <form onSubmit={handleBookingSubmit} className="booking-form">
-            <label>
-              Name*
-              <input name="name" value={bookingData.name} onChange={handleInputChange} />
-            </label>
-
-            <label>
-              Email*
-              <input name="email" value={bookingData.email} onChange={handleInputChange} />
-            </label>
-
-            <label>
-              Phone*
-              <input name="phone" value={bookingData.phone} onChange={handleInputChange} />
-            </label>
-
-            <label>
-              Date*
-              <input type="date" name="date" value={bookingData.date} onChange={handleInputChange} />
-            </label>
-
-            <label>
-              Guests
-              <input type="number" name="guests" value={bookingData.guests} onChange={handleInputChange} />
-            </label>
-
-            <button className="btn-book">Book Now</button>
-          </form>
-
-          {bookingStatus && <p className="booking-status">{bookingStatus}</p>}
-        </section>
-
+       
         {/* MAP */}
         <section className="map-section">
           <h2>Location</h2>

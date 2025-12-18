@@ -77,12 +77,21 @@ export default function Bagh() {
         </div>
 
         {/* DESCRIPTION */}
-        <section className="description-section">
-          <h2>About Bagh e Jinnah</h2>
-          <p>
-           Bagh-e-Jinnah, also known as Lawrence Gardens, is a historical park in Lahore, Pakistan. It spans 141 acres and offers a serene escape into nature, history, and leisure. The park, originally named Lawrence Gardens, was designed as a botanical garden inspired by Kew Gardens in London. It has been a significant cultural and recreational space for the community, hosting various events and activities over the years. Today, it is a popular destination for both locals and tourists, known for its well-maintained green spaces, historical significance, and recreational amenities.
-          </p>
-        </section>
+       <section className="description-section">
+  <h2>About Lawrence Gardens (Bagh-e-Jinnah)</h2>
+  <p>
+    Lawrence Gardens, now called Bagh-e-Jinnah, is a historic botanical garden established
+    during the British colonial era. It offers walking paths, rose gardens, fountains,
+    and a peaceful environment in Lahore.
+  </p>
+  <p>
+    📍 <b>Location:</b> Mall Road, Lahore, near Lahore Zoo<br/>
+    🕰️ <b>Visiting Hours:</b> Daily 6:00 AM – 7:00 PM<br/>
+    🎫 <b>Entry Fee:</b> Free<br/>
+    ⚠️ <b>Tips:</b> Ideal for morning walks, picnics, photography, and family visits.
+  </p>
+</section>
+
 
         {/* STATS */}
         <section className="stats-section">
@@ -137,35 +146,7 @@ export default function Bagh() {
           </div>
         </section>
 
-        {/* BOOKING */}
-        <section className="booking-section">
-          <h2>Book a Tour</h2>
-          <form onSubmit={handleBookingSubmit} className="booking-form">
-            <label>Name*
-              <input name="name" value={bookingData.name} onChange={handleInputChange} />
-            </label>
-
-            <label>Email*
-              <input name="email" value={bookingData.email} onChange={handleInputChange} />
-            </label>
-
-            <label>Phone*
-              <input name="phone" value={bookingData.phone} onChange={handleInputChange} />
-            </label>
-
-            <label>Date*
-              <input type="date" name="date" value={bookingData.date} onChange={handleInputChange} />
-            </label>
-
-            <label>Guests
-              <input type="number" name="guests" value={bookingData.guests} onChange={handleInputChange} />
-            </label>
-
-            <button className="btn-book">Book Now</button>
-          </form>
-          {bookingStatus && <p className="booking-status">{bookingStatus}</p>}
-        </section>
-
+       
         {/* MAP */}
         <section className="map-section">
           <h2>Location</h2>
