@@ -1,122 +1,84 @@
-.cities-container {
-  padding: 30px;
+.admin-page {
+  padding: 40px;
+  width: 100%;
 }
 
-.page-title {
+.admin-title {
+  text-align: center;
   font-size: 32px;
-  font-weight: bold;
-  color: #1d1d1d;
-  text-align: center;
+  color: #fff;
 }
 
-.page-subtext {
+.admin-subtitle {
   text-align: center;
-  color: #777;
-  margin-bottom: 30px;
-  font-size: 15px;
+  color: #b5b5c5;
+  margin-bottom: 35px;
 }
 
-.cities-grid {
+.form-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 25px;
-  margin-bottom: 40px;
 }
 
-/* Box Sections */
-.city-section {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+.admin-card {
+  background: #2c2c3e;
+  padding: 25px;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: #fff;
 }
 
-.city-section h2 {
-  margin-bottom: 15px;
-  font-size: 18px;
-  color: #0d47a1;
+.admin-card h3 {
+  text-align: center;
 }
 
-.city-section input {
-  width: 100%;
+.admin-card input,
+.admin-card textarea {
   padding: 10px;
-  margin-bottom: 12px;
   border-radius: 8px;
-  border: 1px solid #ccc;
-  background: #fafafa;
+  border: none;
+  outline: none;
 }
 
-/* Buttons */
 .btn {
-  width: 100%;
   padding: 12px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.2s;
 }
 
-.add-btn {
-  background: #0d47a1;
-  color: white;
-}
+.primary { background: #2196f3; color: #fff; }
+.warning { background: #ff9800; color: #fff; }
+.danger { background: #f44336; color: #fff; }
 
-.update-btn {
-  background: #0277bd;
-  color: white;
-}
-
-.delete-btn {
-  background: #c62828;
-  color: white;
-}
-
-.btn:hover {
-  opacity: 0.9;
-}
-
-/* View Section */
-.view-section {
-  background: white;
+.table-card {
+  margin-top: 40px;
+  background: #2c2c3e;
   padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  border-radius: 14px;
 }
 
-.view-section h2 {
-  font-size: 20px;
-  color: #0d47a1;
+.table-card h3 {
+  text-align: center;
+  color: #fff;
   margin-bottom: 15px;
 }
 
-.view-section input {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  background: #fafafa;
-}
-
-/* Table */
-.cities-table table {
+table {
   width: 100%;
   border-collapse: collapse;
+  color: #fff;
 }
 
-.cities-table th,
-.cities-table td {
-  padding: 12px;
-  border-bottom: 1px solid #e5e5e5;
-  text-align: left;
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
 }
 
-.cities-table th {
-  background: #f3f6fa;
-  font-weight: bold;
-}
-
-.cities-table tr:hover {
-  background: #f9fbfd;
+tr:hover {
+  background: rgba(255,255,255,0.05);
 }

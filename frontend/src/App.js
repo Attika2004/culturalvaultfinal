@@ -8,6 +8,7 @@ import AboutUs from "./pages/AboutUs";
 import TourBooking from "./pages/TourBooking";
 import MyBookings from "./pages/MyBookings";
 import LahoreEvents from "./pages/LahoreEvents";
+ 
 
 // Site pages
 import BadshahiMosque from "./pages/BadshahiMosque";
@@ -63,6 +64,8 @@ function App() {
       <Route path="/anarkali-bazaar" element={<Anarkali />} />
       <Route path="/lahore-events" element={<LahoreEvents />} />
       <Route path="/tour-booking" element={<TourBooking />} />
+      {/* ✅ NEW DYNAMIC CITY ROUTE */}
+      <Route path="/city/:cityName" element={<LahoreOptions />} />
       
 
       {/* Admin routes */}

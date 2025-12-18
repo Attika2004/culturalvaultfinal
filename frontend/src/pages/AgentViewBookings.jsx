@@ -22,6 +22,20 @@ const AgentViewBookings = () => {
     applyFilters();
   }, [searchQuery, filterStatus, bookings]);
 
+  // 🔹 SAME LOGIC AS ADMIN
+  const getEffectiveStatus = (booking) => {
+    if (!booking.date) return booking.status || "Confirmed";
+
+    const bookingDate = new Date(booking.date);
+    const today = new Date();
+
+    bookingDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    if (bookingDate < today) return "Completed";
+    return booking.status || "Confirmed";
+  };
+
   const fetchBookings = async () => {
     setLoading(true);
     setError("");
@@ -32,7 +46,7 @@ const AgentViewBookings = () => {
         setFilteredBookings(response.data.bookings);
       }
     } catch (err) {
-      console.error("Error fetching bookings:", err);
+      console.error(err);
       setError("Failed to fetch bookings from server");
     } finally {
       setLoading(false);
@@ -42,7 +56,7 @@ const AgentViewBookings = () => {
   const applyFilters = () => {
     let filtered = [...bookings];
 
-    // Apply search filter
+    // 🔍 Search
     if (searchQuery.trim() !== "") {
       filtered = filtered.filter(
         (b) =>
@@ -54,10 +68,11 @@ const AgentViewBookings = () => {
       );
     }
 
-    // Apply status filter
+    // 🔹 STATUS FILTER (DATE-AWARE)
     if (filterStatus !== "all") {
-      filtered = filtered.filter(b => 
-        (b.status || "Confirmed").toLowerCase() === filterStatus.toLowerCase()
+      filtered = filtered.filter(
+        (b) =>
+          getEffectiveStatus(b).toLowerCase() === filterStatus.toLowerCase()
       );
     }
 
@@ -72,9 +87,14 @@ const AgentViewBookings = () => {
     setSelectedBooking(null);
   };
 
+  // 🔹 STATS (DATE-AWARE)
   const totalBookings = bookings.length;
-  const confirmed = bookings.filter(b => (b.status || "Confirmed") === "Confirmed").length;
-  const completed = bookings.filter(b => b.status === "Completed").length;
+  const confirmed = bookings.filter(
+    (b) => getEffectiveStatus(b) === "Confirmed"
+  ).length;
+  const completed = bookings.filter(
+    (b) => getEffectiveStatus(b) === "Completed"
+  ).length;
 
   return (
     <AgentLayout>
@@ -82,11 +102,7 @@ const AgentViewBookings = () => {
         <h1 className="page-title">View All Bookings</h1>
         <p className="page-subtext">Search and view all tour bookings</p>
 
-        {error && (
-          <div className="error-message">
-            {error}
-          </div>
-        )}
+        {error && <div className="error-message">{error}</div>}
 
         {/* Stats */}
         <div className="stats-row">
@@ -113,9 +129,9 @@ const AgentViewBookings = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="search-input"
           />
-          
-          <select 
-            value={filterStatus} 
+
+          <select
+            value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
             className="status-filter"
           >
@@ -153,7 +169,7 @@ const AgentViewBookings = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredBookings.map(b => (
+                  {filteredBookings.map((b) => (
                     <tr key={b.BookingID}>
                       <td>{b.BookingID}</td>
                       <td>{b.name}</td>
@@ -163,12 +179,14 @@ const AgentViewBookings = () => {
                       <td>{b.guests}</td>
                       <td>Rs. {b.totalCost}</td>
                       <td>
-                        <span className={`status-badge ${(b.status || "Confirmed").toLowerCase()}`}>
-                          {b.status || "Confirmed"}
+                        <span
+                          className={`status-badge ${getEffectiveStatus(b).toLowerCase()}`}
+                        >
+                          {getEffectiveStatus(b)}
                         </span>
                       </td>
                       <td>
-                        <button 
+                        <button
                           onClick={() => handleViewDetails(b)}
                           className="view-btn"
                         >
@@ -183,84 +201,49 @@ const AgentViewBookings = () => {
           </div>
         </section>
 
-        {/* Modal for Booking Details */}
+        {/* Modal */}
         {selectedBooking && (
           <div className="modal-overlay" onClick={closeModal}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <button className="close-btn" onClick={closeModal}>×</button>
-              
+              <button className="close-btn" onClick={closeModal}>
+                ×
+              </button>
+
               <h2>Booking Details</h2>
-              
+
               <div className="detail-section">
                 <h3>Customer Information</h3>
-                <div className="detail-row">
-                  <span className="label">Booking ID:</span>
-                  <span className="value">{selectedBooking.BookingID}</span>
-                </div>
-                <div className="detail-row">
-                  <span className="label">Name:</span>
-                  <span className="value">{selectedBooking.name}</span>
-                </div>
-                <div className="detail-row">
-                  <span className="label">Email:</span>
-                  <span className="value">{selectedBooking.email}</span>
-                </div>
-                <div className="detail-row">
-                  <span className="label">Phone:</span>
-                  <span className="value">{selectedBooking.phone}</span>
-                </div>
+                <p><b>ID:</b> {selectedBooking.BookingID}</p>
+                <p><b>Name:</b> {selectedBooking.name}</p>
+                <p><b>Email:</b> {selectedBooking.email}</p>
+                <p><b>Phone:</b> {selectedBooking.phone}</p>
               </div>
 
               <div className="detail-section">
                 <h3>Tour Information</h3>
-                <div className="detail-row">
-                  <span className="label">Tour Date:</span>
-                  <span className="value">{new Date(selectedBooking.date).toLocaleDateString()}</span>
-                </div>
-                <div className="detail-row">
-                  <span className="label">Time:</span>
-                  <span className="value">{selectedBooking.time}</span>
-                </div>
-                <div className="detail-row">
-                  <span className="label">Number of Guests:</span>
-                  <span className="value">{selectedBooking.guests}</span>
-                </div>
-                <div className="detail-row">
-                  <span className="label">Selected Sites:</span>
-                  <span className="value">{selectedBooking.selectedSites}</span>
-                </div>
-                <div className="detail-row">
-                  <span className="label">Tour Package:</span>
-                  <span className="value">{selectedBooking.tourPackage}</span>
-                </div>
-                <div className="detail-row">
-                  <span className="label">Transport Mode:</span>
-                  <span className="value">{selectedBooking.travelMode}</span>
-                </div>
-                {selectedBooking.specialRequests && (
-                  <div className="detail-row">
-                    <span className="label">Special Requests:</span>
-                    <span className="value">{selectedBooking.specialRequests}</span>
-                  </div>
-                )}
+                <p><b>Date:</b> {new Date(selectedBooking.date).toLocaleDateString()}</p>
+                <p><b>Time:</b> {selectedBooking.time}</p>
+                <p><b>Guests:</b> {selectedBooking.guests}</p>
+                <p><b>Sites:</b> {selectedBooking.selectedSites}</p>
+                <p><b>Package:</b> {selectedBooking.tourPackage}</p>
+                <p><b>Transport:</b> {selectedBooking.travelMode}</p>
               </div>
 
               <div className="detail-section">
-                <h3>Payment Information</h3>
-                <div className="detail-row">
-                  <span className="label">Total Cost:</span>
-                  <span className="value price">Rs. {selectedBooking.totalCost}</span>
-                </div>
-                <div className="detail-row">
-                  <span className="label">Status:</span>
-                  <span className={`value status-badge ${(selectedBooking.status || "Confirmed").toLowerCase()}`}>
-                    {selectedBooking.status || "Confirmed"}
+                <h3>Payment</h3>
+                <p><b>Total:</b> Rs. {selectedBooking.totalCost}</p>
+                <p>
+                  <b>Status:</b>{" "}
+                  <span
+                    className={`status-badge ${getEffectiveStatus(selectedBooking).toLowerCase()}`}
+                  >
+                    {getEffectiveStatus(selectedBooking)}
                   </span>
-                </div>
-                <div className="detail-row">
-                  <span className="label">Booked On:</span>
-                  <span className="value">{new Date(selectedBooking.bookingDate).toLocaleString()}</span>
-                </div>
+                </p>
+                <p>
+                  <b>Booked On:</b>{" "}
+                  {new Date(selectedBooking.bookingDate).toLocaleString()}
+                </p>
               </div>
             </div>
           </div>

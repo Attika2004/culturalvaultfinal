@@ -1,220 +1,228 @@
 import React, { useState, useEffect } from "react";
 import AdminLayout from "../components/AdminLayout";
+import axios from "axios";
 import "./ManageSites.css";
 
 const ManageSites = () => {
-  const [editSiteId, setEditSiteId] = useState("");
-  const [editSiteName, setEditSiteName] = useState("");
-  const [editCity, setEditCity] = useState("");
-  const [editDescription, setEditDescription] = useState("");
-  const [editHistory, setEditHistory] = useState("");
-  const [editImages, setEditImages] = useState([]);
-
-  const [deleteSiteId, setDeleteSiteId] = useState("");
-  const [deleteSiteName, setDeleteSiteName] = useState("");
-
-  const [addSiteName, setAddSiteName] = useState("");
-  const [addCity, setAddCity] = useState("");
-  const [addDescription, setAddDescription] = useState("");
-  const [addHistory, setAddHistory] = useState("");
-  const [addImages, setAddImages] = useState([]);
-
   const [sites, setSites] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Placeholder functions
-  const handleEditSite = () => {
-    alert(`Site ${editSiteId} updated!`);
-  };
+  // ADD
+  const [addSiteName, setAddSiteName] = useState("");
+  const [addCity, setAddCity] = useState("");
+  const [addCategory, setAddCategory] = useState("");
+  const [addDescription, setAddDescription] = useState("");
+  const [addHistory, setAddHistory] = useState("");
+  const [addLatitude, setAddLatitude] = useState("");
+  const [addLongitude, setAddLongitude] = useState("");
+  const [addImage, setAddImage] = useState(null);
 
-  const handleDeleteSite = () => {
-    if (deleteSiteId) {
-      alert(`Site with ID ${deleteSiteId} deleted!`);
-    } else if (deleteSiteName) {
-      alert(`Site named "${deleteSiteName}" deleted!`);
-    } else {
-      alert("Enter Site ID or Name to delete!");
+  // EDIT
+  const [editSiteId, setEditSiteId] = useState("");
+  const [editSiteName, setEditSiteName] = useState("");
+  const [editCity, setEditCity] = useState("");
+  const [editCategory, setEditCategory] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  const [editHistory, setEditHistory] = useState("");
+  const [editLatitude, setEditLatitude] = useState("");
+  const [editLongitude, setEditLongitude] = useState("");
+  const [editImage, setEditImage] = useState(null);
+
+  // DELETE
+  const [deleteSiteId, setDeleteSiteId] = useState("");
+
+  const fetchSites = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/admin/sites");
+      setSites(res.data.sites || []); // Make sure to use .sites if your API wraps data
+    } catch (err) {
+      console.error(err);
+      alert("Failed to fetch sites");
     }
   };
 
-  const handleAddSite = () => {
-    alert(`Site ${addSiteName} added!`);
-  };
-
-  const handleEditImagesChange = (e) => {
-    setEditImages([...e.target.files]);
-  };
-
-  const handleAddImagesChange = (e) => {
-    setAddImages([...e.target.files]);
-  };
-
   useEffect(() => {
-    setSites([
-      {
-        id: 1,
-        name: "Badshahi Mosque",
-        city: "Lahore",
-        description: "Historic mosque",
-        history: "Built in 1673",
-        images: ["img1.jpg", "img2.jpg"]
-      },
-      {
-        id: 2,
-        name: "Clifton Beach",
-        city: "Karachi",
-        description: "Popular beach",
-        history: "Famous tourist spot",
-        images: ["img3.jpg"]
-      }
-    ]);
+    fetchSites();
   }, []);
 
+  const handleAddSite = async () => {
+    if (!addSiteName || !addCity || !addCategory)
+      return alert("Site Name, City ID & Category ID required");
+
+    try {
+      const fd = new FormData();
+      fd.append("SiteName", addSiteName);
+      fd.append("CityID", addCity);
+      fd.append("CategoryID", addCategory);
+      fd.append("Description", addDescription);
+      fd.append("History", addHistory);
+      fd.append("Latitude", addLatitude);
+      fd.append("Longitude", addLongitude);
+      if (addImage) fd.append("MainImage", addImage);
+
+      await axios.post("http://localhost:5000/api/admin/sites/add", fd);
+
+      alert("Site added successfully!");
+      fetchSites();
+
+      setAddSiteName("");
+      setAddCity("");
+      setAddCategory("");
+      setAddDescription("");
+      setAddHistory("");
+      setAddLatitude("");
+      setAddLongitude("");
+      setAddImage(null);
+    } catch (err) {
+      console.error("Add site error:", err);
+      alert("Failed to add site");
+    }
+  };
+
+  const handleEditSite = async () => {
+    if (!editSiteId || !editSiteName || !editCity || !editCategory)
+      return alert("All edit fields required");
+
+    try {
+      const fd = new FormData();
+      fd.append("SiteName", editSiteName);
+      fd.append("CityID", editCity);
+      fd.append("CategoryID", editCategory);
+      fd.append("Description", editDescription);
+      fd.append("History", editHistory);
+      fd.append("Latitude", editLatitude);
+      fd.append("Longitude", editLongitude);
+      if (editImage) fd.append("MainImage", editImage);
+
+      await axios.put(
+        `http://localhost:5000/api/admin/sites/${editSiteId}`,
+        fd
+      );
+
+      alert("Site updated successfully!");
+      fetchSites();
+
+      setEditSiteId("");
+      setEditSiteName("");
+      setEditCity("");
+      setEditCategory("");
+      setEditDescription("");
+      setEditHistory("");
+      setEditLatitude("");
+      setEditLongitude("");
+      setEditImage(null);
+    } catch (err) {
+      console.error("Edit site error:", err);
+      alert("Failed to update site");
+    }
+  };
+
+  const handleDeleteSite = async () => {
+    if (!deleteSiteId) return alert("Site ID required");
+
+    try {
+      await axios.delete(
+        `http://localhost:5000/api/admin/sites/${deleteSiteId}`
+      );
+      alert("Site deleted successfully!");
+      fetchSites();
+      setDeleteSiteId("");
+    } catch (err) {
+      console.error("Delete site error:", err);
+      alert("Failed to delete site");
+    }
+  };
+
   const filteredSites = sites.filter(
-    (site) =>
-      site.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      site.id.toString() === searchQuery
+    s =>
+      s.SiteName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      s.SiteID.toString() === searchQuery
   );
 
   return (
     <AdminLayout>
-    <div className="manage-sites-container">
-      <h1 className="page-title">Manage Sites</h1>
-      <p className="page-subtext">Edit, delete, add, or view sites below.</p>
+      <div className="admin-page">
+        <h1 className="admin-title">Manage Sites</h1>
+        <p className="admin-subtitle">Add, edit or remove cultural sites</p>
 
-      <div className="sites-sections">
+        <div className="form-grid">
+          {/* ADD */}
+          <div className="admin-card">
+            <h3>Add Site</h3>
+            <input placeholder="Site Name" value={addSiteName} onChange={e => setAddSiteName(e.target.value)} />
+            <input placeholder="City ID" value={addCity} onChange={e => setAddCity(e.target.value)} />
+            <input placeholder="Category ID" value={addCategory} onChange={e => setAddCategory(e.target.value)} />
+            <textarea placeholder="Description" value={addDescription} onChange={e => setAddDescription(e.target.value)} />
+            <textarea placeholder="History" value={addHistory} onChange={e => setAddHistory(e.target.value)} />
+            <input placeholder="Latitude" value={addLatitude} onChange={e => setAddLatitude(e.target.value)} />
+            <input placeholder="Longitude" value={addLongitude} onChange={e => setAddLongitude(e.target.value)} />
+            <input type="file" onChange={e => setAddImage(e.target.files[0])} />
+            <button className="btn primary" onClick={handleAddSite}>Add Site</button>
+          </div>
 
-        {/* Edit Site Section */}
-        <section className="site-section">
-          <h2>Edit Site</h2>
-          <input
-            type="text"
-            placeholder="Site ID"
-            value={editSiteId}
-            onChange={(e) => setEditSiteId(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Site Name"
-            value={editSiteName}
-            onChange={(e) => setEditSiteName(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="City"
-            value={editCity}
-            onChange={(e) => setEditCity(e.target.value)}
-          />
-          <textarea
-            placeholder="Description"
-            value={editDescription}
-            onChange={(e) => setEditDescription(e.target.value)}
-          />
-          <textarea
-            placeholder="History"
-            value={editHistory}
-            onChange={(e) => setEditHistory(e.target.value)}
-          />
-          <input type="file" multiple onChange={handleEditImagesChange} />
-          <button className="action-btn" onClick={handleEditSite}>
-            Update Site
-          </button>
-        </section>
+          {/* EDIT */}
+          <div className="admin-card">
+            <h3>Edit Site</h3>
+            <input placeholder="Site ID" value={editSiteId} onChange={e => setEditSiteId(e.target.value)} />
+            <input placeholder="Site Name" value={editSiteName} onChange={e => setEditSiteName(e.target.value)} />
+            <input placeholder="City ID" value={editCity} onChange={e => setEditCity(e.target.value)} />
+            <input placeholder="Category ID" value={editCategory} onChange={e => setEditCategory(e.target.value)} />
+            <textarea placeholder="Description" value={editDescription} onChange={e => setEditDescription(e.target.value)} />
+            <textarea placeholder="History" value={editHistory} onChange={e => setEditHistory(e.target.value)} />
+            <input type="file" onChange={e => setEditImage(e.target.files[0])} />
+            <button className="btn warning" onClick={handleEditSite}>Update Site</button>
+          </div>
 
-        {/* Delete Site Section */}
-        <section className="site-section">
-          <h2>Delete Site</h2>
-          <input
-            type="text"
-            placeholder="Site ID"
-            value={deleteSiteId}
-            onChange={(e) => setDeleteSiteId(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Or Site Name"
-            value={deleteSiteName}
-            onChange={(e) => setDeleteSiteName(e.target.value)}
-          />
-          <button className="action-btn delete-btn" onClick={handleDeleteSite}>
-            Delete Site
-          </button>
-        </section>
+          {/* DELETE */}
+          <div className="admin-card">
+            <h3>Delete Site</h3>
+            <input placeholder="Site ID" value={deleteSiteId} onChange={e => setDeleteSiteId(e.target.value)} />
+            <button className="btn danger" onClick={handleDeleteSite}>Delete Site</button>
+          </div>
+        </div>
 
-        {/* Add Site Section */}
-        <section className="site-section">
-          <h2>Add Site</h2>
+        {/* TABLE */}
+        <div className="table-card">
+          <h3>All Sites</h3>
           <input
-            type="text"
-            placeholder="Site Name"
-            value={addSiteName}
-            onChange={(e) => setAddSiteName(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="City"
-            value={addCity}
-            onChange={(e) => setAddCity(e.target.value)}
-          />
-          <textarea
-            placeholder="Description"
-            value={addDescription}
-            onChange={(e) => setAddDescription(e.target.value)}
-          />
-          <textarea
-            placeholder="History"
-            value={addHistory}
-            onChange={(e) => setAddHistory(e.target.value)}
-          />
-          <input type="file" multiple onChange={handleAddImagesChange} />
-          <button className="action-btn add-btn" onClick={handleAddSite}>
-            Add Site
-          </button>
-        </section>
-
-        {/* View/Search Sites Section */}
-        <section className="site-section view-section">
-          <h2>View/Search Sites</h2>
-          <input
-            type="text"
+            className="search-input"
             placeholder="Search by ID or Name"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={e => setSearchQuery(e.target.value)}
           />
-          <div className="sites-list">
-            {filteredSites.length === 0 ? (
-              <p>No sites found.</p>
-            ) : (
-              <table>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>City</th>
-                    <th>Description</th>
-                    <th>History</th>
-                    <th>Images</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredSites.map((site) => (
-                    <tr key={site.id}>
-                      <td>{site.id}</td>
-                      <td>{site.name}</td>
-                      <td>{site.city}</td>
-                      <td>{site.description}</td>
-                      <td>{site.history}</td>
-                      <td>{site.images.join(", ")}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
-        </section>
 
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>City</th>
+                <th>Category</th>
+                <th>Image</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredSites.map(site => (
+                <tr key={site.SiteID}>
+                  <td>{site.SiteID}</td>
+                  <td>{site.SiteName}</td>
+                  <td>{site.CityID}</td>
+                  <td>{site.CategoryID}</td>
+                  <td>
+                    {site.MainImageURL ? (
+                      <img
+                        src={`http://localhost:5000/uploads/${site.MainImageURL}`}
+                        alt=""
+                        style={{ width: "80px", height: "50px", objectFit: "cover" }}
+                      />
+                    ) : "No Image"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
     </AdminLayout>
   );
 };

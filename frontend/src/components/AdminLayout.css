@@ -2,80 +2,98 @@
 .admin-container {
   display: flex;
   min-height: 100vh;
-  background: #f5f7fa !important; /* Light clean background */
-  font-family: "Arial", sans-serif;
+  background: #eef1f6 !important; /* Softer modern background */
+  font-family: "Inter", "Arial", sans-serif;
 }
 
 /* Sidebar */
 .admin-sidebar {
-  width: 250px;
-  background: #180a66;
-  border-right: 1px solid #dcdcdc;
-  padding: 25px 15px;
+  width: 260px;
+  background: linear-gradient(180deg, #180a66, #12084d);
+  padding: 28px 18px;
   position: fixed;
   top: 0;
   bottom: 0;
+  left: 0;
   overflow-y: auto;
+  color: white;
+  box-shadow: 4px 0 18px rgba(0, 0, 0, 0.15);
 }
 
 /* Sidebar Title */
 .sidebar-title {
-  font-size: 22px;
-  font-weight: bold;
-  color: #ffffff;
-  margin-bottom: 30px;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 35px;
   text-align: center;
+  letter-spacing: 1px;
+  color: #ffffff;
 }
 
-/* Menu items */
+/* Menu items container */
 .sidebar-menu {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
 }
 
+/* Menu Item */
 .menu-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  border-radius: 8px;
+  gap: 14px;
+  padding: 13px 15px;
+  border-radius: 10px;
   text-decoration: none;
-  color: #333;
   font-size: 15px;
-  transition: 0.2s;
+  background: rgba(255, 255, 255, 0.07);
+  color: #e3e7ff;
+  transition: all 0.25s ease-in-out;
+  backdrop-filter: blur(6px);
 }
 
 .menu-item:hover {
-  background: #e8eef5;
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateX(5px);
 }
 
+/* Active Route */
 .menu-item.active {
-  background: #d0e1ff;
-  color: #0d47a1;
-  font-weight: bold;
+  background: #ffffff;
+  color: #180a66;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.6);
 }
 
+/* Logout */
 .logout {
   margin-top: 40px;
-  background: #ffeded;
-  color: #d63031;
+  background: rgba(255, 77, 77, 0.15) !important;
+  color: #ffd4d4 !important;
 }
 
 .logout:hover {
-  background: #ffdbdb;
+  background: rgba(255, 77, 77, 0.27) !important;
+  transform: translateX(5px);
 }
 
-/* Icons */
+/* Sidebar Icons */
 .icon {
   font-size: 18px;
 }
 
 /* Main Content Area */
 .admin-content {
-  margin-left: 250px; /* Space for sidebar */
-  padding: 30px;
-  width: 100%;
+  margin-left: 260px;
+  padding: 35px;
+  width: calc(100% - 260px);
+  background: #eef1f6;
   min-height: 100vh;
-  background: #f5f7fa;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Smooth Fade Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

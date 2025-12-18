@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AgentLayout from "../components/AgentLayout";
 import axios from "axios";
 import "./AgentDashboard.css";
@@ -6,77 +6,86 @@ import "./AgentDashboard.css";
 const API_URL = "http://localhost:5000/api";
 
 const AgentDashboard = () => {
-  const [stats, setStats] = useState({
-    totalBookings: 0,
-    todayBookings: 0,
-    upcomingBookings: 0,
-    completedBookings: 0
-  });
-  const [loading, setLoading] = useState(true);
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchBookingStats();
+    fetchBookings();
   }, []);
 
-  const fetchBookingStats = async () => {
-    setLoading(true);
+  const fetchBookings = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(`${API_URL}/bookings/all`);
-      
       if (response.data.success) {
-        const bookings = response.data.bookings;
-        const today = new Date().toDateString();
-        
-        setStats({
-          totalBookings: bookings.length,
-          todayBookings: bookings.filter(b => 
-            new Date(b.bookingDate).toDateString() === today
-          ).length,
-          upcomingBookings: bookings.filter(b => 
-            new Date(b.date) > new Date()
-          ).length,
-          completedBookings: bookings.filter(b => 
-            b.status === "Completed"
-          ).length
-        });
+        setBookings(response.data.bookings);
       }
-    } catch (err) {
-      console.error("Error fetching booking stats:", err);
+    } catch (error) {
+      console.error("Failed to fetch bookings");
     } finally {
       setLoading(false);
     }
   };
 
+  // 🔹 SAME DATE LOGIC AS ADMIN
+  const getEffectiveStatus = (booking) => {
+    if (!booking.date) return booking.status || "Confirmed";
+
+    const tourDate = new Date(booking.date);
+    const today = new Date();
+
+    tourDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    if (tourDate < today) return "Completed";
+    return booking.status || "Confirmed";
+  };
+
+  // 🔹 DASHBOARD STATS
+  const totalTours = bookings.length;
+
+  const completedTours = bookings.filter(
+    (b) => getEffectiveStatus(b) === "Completed"
+  ).length;
+
+  const upcomingTours = bookings.filter(
+    (b) =>
+      getEffectiveStatus(b) === "Confirmed" ||
+      getEffectiveStatus(b) === "Pending"
+  ).length;
+
+  const cancelledTours = bookings.filter(
+    (b) => getEffectiveStatus(b) === "Cancelled"
+  ).length;
+
   return (
     <AgentLayout>
       <div className="dashboard-container">
         <h1 className="welcome-text">Welcome, Agent!</h1>
-        <p className="welcome-subtext">Here is your bookings overview</p>
+        <p className="welcome-subtext">Here is your tour overview</p>
 
         {loading ? (
-          <div style={{ textAlign: "center", padding: "40px" }}>
-            <p>Loading statistics...</p>
-          </div>
+          <p style={{ color: "#fff" }}>Loading dashboard...</p>
         ) : (
           <div className="stats-grid">
             <div className="stat-box">
-              <h2>{stats.totalBookings}</h2>
-              <p>Total Bookings</p>
+              <h2>{totalTours}</h2>
+              <p>Total Tours</p>
             </div>
 
-            <div className="stat-box">
-              <h2>{stats.todayBookings}</h2>
-              <p>Today's Bookings</p>
+            <div className="stat-box completed">
+              <h2>{completedTours}</h2>
+              <p>Completed Tours</p>
             </div>
 
-            <div className="stat-box">
-              <h2>{stats.upcomingBookings}</h2>
+            <div className="stat-box upcoming">
+              <h2>{upcomingTours}</h2>
               <p>Upcoming Tours</p>
             </div>
 
-            <div className="stat-box">
-              <h2>{stats.completedBookings}</h2>
-              <p>Completed Tours</p>
+            <div className="stat-box cancelled">
+              <h2>{cancelledTours}</h2>
+              <p>Cancelled Tours</p>
             </div>
           </div>
         )}

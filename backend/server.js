@@ -4,7 +4,7 @@ const { connectDB } = require('./db');
 
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
-const cityRoutes = require('./routes/cityRoutes');
+const citiesRoutes = require('./routes/citiesRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const siteRoutes = require('./routes/siteRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
@@ -17,18 +17,26 @@ const adminRoutes = require('./routes/adminRoutes');
 const agentRoutes = require('./routes/agentRoutes');
 
 const app = express();
-app.use(cors());
-app.use(cors({ origin: "http://localhost:3000",credentials: true}));
 
+// CORS
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true
+}));
 
+// JSON
 app.use(express.json());
 
-connectDB();
+// Static uploads
+app.use("/uploads", express.static("uploads"));
+
+// Connect to DB
+connectDB().then(() => console.log("DB connected")).catch(err => console.error(err));
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/cities', cityRoutes);
+app.use('/api/cities', citiesRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/sites', siteRoutes);
 app.use('/api/reviews', reviewRoutes);
@@ -39,7 +47,6 @@ app.use('/api/bookings', bookingRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/agents', agentRoutes);
-
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -33,21 +33,32 @@ const Bookings = () => {
     }
   }, [searchQuery, bookings]);
 
+  // 🔹 AUTO STATUS BASED ON DATE
+  const getEffectiveStatus = (booking) => {
+    if (!booking.date) return booking.status || "Confirmed";
+
+    const bookingDate = new Date(booking.date);
+    const today = new Date();
+
+    bookingDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    if (bookingDate < today) return "Completed";
+    return booking.status || "Confirmed";
+  };
+
   const fetchBookings = async () => {
     setLoading(true);
     setError("");
-    
     try {
       const response = await axios.get(`${API_URL}/bookings/all`);
-      
-      if (response.data && response.data.success) {
+      if (response.data?.success) {
         setBookings(response.data.bookings);
         setFilteredBookings(response.data.bookings);
       } else {
         setError("Failed to load bookings");
       }
     } catch (err) {
-      console.error("Error fetching bookings:", err);
       setError(err.response?.data?.error || "Cannot connect to server");
     } finally {
       setLoading(false);
@@ -59,265 +70,149 @@ const Bookings = () => {
       alert("Please enter Booking ID and select a status");
       return;
     }
-
     try {
       setLoading(true);
       const response = await axios.put(
         `${API_URL}/bookings/${selectedBookingId}/status`,
         { status: updateStatus }
       );
-
       if (response.data.success) {
-        alert(`Booking ${selectedBookingId} status updated successfully!`);
+        alert("Status updated!");
         fetchBookings();
         setSelectedBookingId("");
         setUpdateStatus("");
       }
     } catch (err) {
-      alert(`Failed to update: ${err.response?.data?.error || err.message}`);
+      alert(err.response?.data?.error || err.message);
     } finally {
       setLoading(false);
     }
   };
 
   const handleDeleteBooking = async () => {
-    if (!selectedBookingId) {
-      alert("Please enter Booking ID");
-      return;
-    }
+    if (!selectedBookingId) return alert("Enter Booking ID");
+    if (!window.confirm("Are you sure?")) return;
 
-    if (window.confirm(`Are you sure you want to delete booking ${selectedBookingId}?`)) {
-      try {
-        setLoading(true);
-        const response = await axios.delete(`${API_URL}/bookings/${selectedBookingId}`);
-
-        if (response.data.success) {
-          alert("Booking deleted successfully!");
-          fetchBookings();
-          setSelectedBookingId("");
-        }
-      } catch (err) {
-        alert(`Failed to delete: ${err.response?.data?.error || err.message}`);
-      } finally {
-        setLoading(false);
+    try {
+      setLoading(true);
+      const response = await axios.delete(
+        `${API_URL}/bookings/${selectedBookingId}`
+      );
+      if (response.data.success) {
+        alert("Booking deleted!");
+        fetchBookings();
+        setSelectedBookingId("");
       }
+    } catch (err) {
+      alert(err.response?.data?.error || err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
+  // 🔹 STATS (DATE-AWARE)
   const totalBookings = bookings.length;
-  const completed = bookings.filter((b) => b.status === "Completed").length;
-  const pending = bookings.filter(
-    (b) => b.status === "Pending" || b.status === "Confirmed"
+  const completed = bookings.filter(
+    (b) => getEffectiveStatus(b) === "Completed"
   ).length;
-  const cancelled = bookings.filter((b) => b.status === "Cancelled").length;
+  const pending = bookings.filter(
+    (b) =>
+      getEffectiveStatus(b) === "Pending" ||
+      getEffectiveStatus(b) === "Confirmed"
+  ).length;
+  const cancelled = bookings.filter(
+    (b) => getEffectiveStatus(b) === "Cancelled"
+  ).length;
+
+  // 🔹 CSV DOWNLOAD (DATE-AWARE STATUS)
+  const downloadCSV = () => {
+    if (!bookings.length) return alert("No bookings");
+
+    const headers = [
+      "BookingID",
+      "Name",
+      "Email",
+      "Phone",
+      "Date",
+      "Time",
+      "Sites",
+      "Guests",
+      "Package",
+      "Transport",
+      "Total Cost",
+      "Status",
+      "Booking Date"
+    ];
+
+    const rows = bookings.map((b) => [
+      b.BookingID,
+      b.name,
+      b.email,
+      b.phone,
+      new Date(b.date).toLocaleDateString(),
+      b.time,
+      b.selectedSites,
+      b.guests,
+      b.tourPackage,
+      b.travelMode,
+      b.totalCost,
+      getEffectiveStatus(b),
+      new Date(b.bookingDate).toLocaleDateString()
+    ]);
+
+    const csv =
+      [headers, ...rows]
+        .map((r) => r.map((c) => `"${c ?? ""}"`).join(","))
+        .join("\n");
+
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "all_bookings.csv";
+    link.click();
+  };
 
   return (
     <AdminLayout>
       <div className="bookings-container">
         <h1 className="page-title">Manage Bookings</h1>
-        <p className="page-subtext">Search, view, update or delete bookings below.</p>
-
-        {error && (
-          <div style={{
-            background: "rgba(255, 0, 0, 0.1)",
-            border: "1px solid red",
-            color: "red",
-            padding: "15px",
-            borderRadius: "8px",
-            marginBottom: "20px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center"
-          }}>
-            <span>⚠️ {error}</span>
-            <button
-              onClick={fetchBookings}
-              style={{
-                padding: "8px 16px",
-                background: "#fff",
-                border: "1px solid red",
-                borderRadius: "6px",
-                cursor: "pointer",
-                color: "red",
-                fontWeight: "600"
-              }}
-            >
-              🔄 Retry
-            </button>
-          </div>
-        )}
 
         {/* Stats */}
         <div className="stats-grid">
-          <div className="stat-card">
-            <h3>Total Bookings</h3>
-            <p>{totalBookings}</p>
-          </div>
-          <div className="stat-card">
-            <h3>Completed</h3>
-            <p>{completed}</p>
-          </div>
-          <div className="stat-card">
-            <h3>Pending</h3>
-            <p>{pending}</p>
-          </div>
-          <div className="stat-card">
-            <h3>Cancelled</h3>
-            <p>{cancelled}</p>
-          </div>
+          <div className="stat-card"><h3>Total</h3><p>{totalBookings}</p></div>
+          <div className="stat-card"><h3>Completed</h3><p>{completed}</p></div>
+          <div className="stat-card"><h3>Pending</h3><p>{pending}</p></div>
+          <div className="stat-card"><h3>Cancelled</h3><p>{cancelled}</p></div>
         </div>
 
-        {/* Search */}
-        <section style={{
-          background: "rgba(44,44,62,0.9)",
-          padding: "20px",
-          borderRadius: "15px",
-          marginBottom: "20px",
-        }}>
-          <input
-            type="text"
-            placeholder="Search by Booking ID, Name, Email, or Sites"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            style={{
-              width: "100%",
-              padding: "12px",
-              borderRadius: "8px",
-              border: "none",
-              fontSize: "15px",
-              outline: "none"
-            }}
-          />
-        </section>
+        {/* CSV */}
+        <div style={{ textAlign: "right", marginBottom: 20 }}>
+          <button onClick={downloadCSV} className="action-btn">
+            ⬇️ Download CSV
+          </button>
+        </div>
 
-        {/* Bookings List */}
-        <section style={{
-          background: "rgba(44,44,62,0.9)",
-          padding: "25px",
-          borderRadius: "15px",
-          marginBottom: "30px",
-        }}>
-          <h2 style={{ color: "#fff", marginBottom: "20px" }}>Bookings</h2>
-          
+        {/* Bookings */}
+        <section className="bookings-section">
           {loading ? (
-            <div style={{ textAlign: "center", color: "#fff", padding: "40px" }}>
-              <div style={{ fontSize: "40px", marginBottom: "10px" }}>⏳</div>
-              <p>Loading bookings...</p>
-            </div>
-          ) : filteredBookings.length === 0 ? (
-            <div style={{ textAlign: "center", color: "#fff", padding: "40px" }}>
-              <div style={{ fontSize: "60px", marginBottom: "10px" }}>📭</div>
-              <p>No bookings found.</p>
-            </div>
+            <p style={{ color: "#fff" }}>Loading...</p>
           ) : (
-            <div>
-              {filteredBookings.map((booking, index) => (
-                <div 
-                  key={booking.BookingID || index}
-                  style={{
-                    background: "rgba(255,255,255,0.08)",
-                    padding: "20px",
-                    borderRadius: "12px",
-                    marginBottom: "15px",
-                    color: "#fff",
-                    transition: "all 0.3s"
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.12)"}
-                  onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
-                >
-                  <div style={{ 
-                    display: "grid", 
-                    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", 
-                    gap: "15px" 
-                  }}>
-                    <div>
-                      <strong style={{ color: "#ffd700" }}>ID:</strong> {booking.BookingID}
-                    </div>
-                    <div>
-                      <strong style={{ color: "#ffd700" }}>Name:</strong> {booking.name}
-                    </div>
-                    <div>
-                      <strong style={{ color: "#ffd700" }}>Email:</strong> {booking.email}
-                    </div>
-                    <div>
-                      <strong style={{ color: "#ffd700" }}>Phone:</strong> {booking.phone}
-                    </div>
-                    <div>
-                      <strong style={{ color: "#ffd700" }}>Date:</strong> {new Date(booking.date).toLocaleDateString()}
-                    </div>
-                    <div>
-                      <strong style={{ color: "#ffd700" }}>Time:</strong> {booking.time}
-                    </div>
-                    <div style={{ gridColumn: "1 / -1" }}>
-                      <strong style={{ color: "#ffd700" }}>Sites:</strong> {booking.selectedSites}
-                    </div>
-                    <div>
-                      <strong style={{ color: "#ffd700" }}>Guests:</strong> {booking.guests}
-                    </div>
-                    <div>
-                      <strong style={{ color: "#ffd700" }}>Package:</strong> {booking.tourPackage}
-                    </div>
-                    <div>
-                      <strong style={{ color: "#ffd700" }}>Transport:</strong> {booking.travelMode}
-                    </div>
-                    <div>
-                      <strong style={{ color: "#ffd700" }}>Total:</strong> Rs. {booking.totalCost}
-                    </div>
-                    <div>
-                      <strong style={{ color: "#ffd700" }}>Status:</strong>{" "}
-                      <span style={{
-                        background: booking.status === "Completed" ? "#4caf50" : 
-                                   booking.status === "Cancelled" ? "#f44336" : "#ff9800",
-                        padding: "4px 8px",
-                        borderRadius: "4px",
-                        fontSize: "12px",
-                        fontWeight: "600"
-                      }}>
-                        {booking.status || "Confirmed"}
-                      </span>
-                    </div>
-                    <div>
-                      <strong style={{ color: "#ffd700" }}>Booked On:</strong> {new Date(booking.bookingDate).toLocaleDateString()}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            filteredBookings.map((booking, i) => (
+              <div key={i} className="booking-card">
+                <p><b>ID:</b> {booking.BookingID}</p>
+                <p><b>Name:</b> {booking.name}</p>
+                <p><b>Email:</b> {booking.email}</p>
+                <p><b>Date:</b> {new Date(booking.date).toLocaleDateString()}</p>
+                <p>
+                  <b>Status:</b>{" "}
+                  <span className={`status ${getEffectiveStatus(booking).toLowerCase()}`}>
+                    {getEffectiveStatus(booking)}
+                  </span>
+                </p>
+              </div>
+            ))
           )}
-        </section>
-
-        {/* Actions */}
-        <section className="actions-section">
-          <h2>Update or Delete Booking</h2>
-          <input
-            type="text"
-            placeholder="Enter Booking ID"
-            value={selectedBookingId}
-            onChange={(e) => setSelectedBookingId(e.target.value)}
-          />
-          <select value={updateStatus} onChange={(e) => setUpdateStatus(e.target.value)}>
-            <option value="">Select Status</option>
-            <option value="Pending">Pending</option>
-            <option value="Confirmed">Confirmed</option>
-            <option value="Completed">Completed</option>
-            <option value="Cancelled">Cancelled</option>
-          </select>
-          <div className="actions-btns">
-            <button 
-              className="action-btn" 
-              onClick={handleUpdateStatus} 
-              disabled={loading}
-            >
-              {loading ? "⏳ Updating..." : "Update Status"}
-            </button>
-            <button 
-              className="action-btn delete-btn" 
-              onClick={handleDeleteBooking} 
-              disabled={loading}
-            >
-              {loading ? "⏳ Deleting..." : "Delete Booking"}
-            </button>
-          </div>
         </section>
       </div>
     </AdminLayout>

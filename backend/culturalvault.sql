@@ -138,19 +138,16 @@ GO
 ------------------------------------------
 -- 11. TourGuides Table
 ------------------------------------------
-CREATE TABLE TourGuides (
+CREATE TABLE TourGuides1 (
     GuideID INT IDENTITY(1,1) PRIMARY KEY,
-    UserID INT NOT NULL,
+    Fname varchar(20) Not null,
+    Lname varchar(20),
     Bio VARCHAR(MAX),
     ExperienceYears INT,
     Languages VARCHAR(500),
     CNIC VARCHAR(20),
-    Rating DECIMAL(3,2) DEFAULT 0,
-    CreatedAt DATETIME DEFAULT GETDATE(),
-
-    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+    ContactNo int,
 );
-GO
 
 ------------------------------------------
 -- 12. GuideReviews Table
